@@ -22,7 +22,7 @@ const Profile = (props) => {
   const Options = ({ data }) => {
     let email = props?.get_user_details?.email
     return (
-      <TouchableOpacity style={styles.actionItem} onPress={() => null}>
+      <TouchableOpacity style={styles.actionItem} onPress={() => data?.onPress(props)}>
         <View style={styles.iconWrapper}>
           {data?.icon}
         </View>

@@ -91,33 +91,39 @@ export const settingsOptions = [
   {
     title: "Change Bio",
     slug: "Tell us about yourself.",
-    icon: <Entypo name="users" size={RFValue(15)} color="#fff" />
+    icon: <Entypo name="users" size={RFValue(15)} color="#fff" />,
+    onPress: () => null
   },
   {
     title: "Change Password",
     slug: "Secure your account.",
-    icon: <Entypo name="lock" size={RFValue(15)} color="#fff" />
+    icon: <Entypo name="lock" size={RFValue(15)} color="#fff" />,
+    onPress: () => null
   },
   {
     title: "Email Address",
     slug: null,
-    icon: <Entypo name="email" size={RFValue(15)} color="#fff" />
+    icon: <Entypo name="email" size={RFValue(15)} color="#fff" />,
+    onPress: () => null
   },
   {
     title: "Change Password",
     slug: "Secure your account.",
-    icon: <Entypo name="lock" size={RFValue(15)} color="#fff" />
+    icon: <Entypo name="lock" size={RFValue(15)} color="#fff" />,
+    onPress: () => null
   },
   {
     title: "Invite Friends",
     slug: "Bring your friends to real world.",
-    icon: <Entypo name="share" size={RFValue(15)} color="#fff" />
+    icon: <Entypo name="share" size={RFValue(15)} color="#fff" />,
+    onPress: () => null
   },
 
   {
     title: "Contact Support",
     slug: "24/7 Available for you.",
-    icon: <MaterialIcons name="support-agent" size={RFValue(20)} color="#fff" />
+    icon: <MaterialIcons name="support-agent" size={RFValue(20)} color="#fff" />,
+    onPress: () => null
   },
   {
     title: "Logout",
