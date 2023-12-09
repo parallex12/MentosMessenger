@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image, KeyboardAvoidingView, ScrollView, Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
+import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
 import { connect } from "react-redux";
 import { styles as _styles } from "../../styles/ChatScreen/main";
 import Header from "./components/Header";
@@ -12,6 +12,7 @@ import { doc, getFirestore, onSnapshot } from "firebase/firestore";
 import * as ImagePicker from 'expo-image-picker';
 import MediaSheet from "./components/MediaSheet";
 import { firebaseImageUpload } from "../../middleware";
+import MediaChatCard from "./components/MediaChatCard";
 
 const ChatScreen = (props) => {
   let { } = props;
@@ -29,7 +30,7 @@ const ChatScreen = (props) => {
   const [chatData, setChatData] = useState(null)
   const [messages, setMessages] = useState([])
   const [imageUploadProgress, setImageUploadProgress] = useState(null)
-  const [image, setImage] = useState(null)
+  const [images, setImages] = useState(null)
   const [isRelationUpdated, setIsRelationUpdated] = useState(null)
   const scrollRef = useRef();
 
@@ -37,8 +38,28 @@ const ChatScreen = (props) => {
     if (chatRelation == null) {
       props?.getRelation(usersIds)
         .then((res) => {
-          setLoading(false)
-          setChatRelation(res)
+          if (res == 404) {
+            let _newChatData = {
+              users: usersIds,
+              messages: [],
+              JoinedUsers: [otherUserData?.id, currentUserId],
+              reciever_details: otherUserData,
+              sender_details: currentUser,
+              lastMessage: null,
+              created_at: new Date().toLocaleTimeString()
+            }
+            props?.createRelation(_newChatData)
+              .then((res) => {
+                setIsRelationUpdated(true)
+              })
+              .catch((e) => {
+                console.log(e)
+              })
+          } else {
+            setLoading(false)
+            setChatRelation(res)
+          }
+
         })
         .catch((e) => console.log(e))
     }
@@ -69,117 +90,79 @@ const ChatScreen = (props) => {
       sender: currentUserId,
       reciever: otherUserData?.id,
       message: messageText,
-      image: image,
+      images: images,
       sent: false,
       created_at: new Date().toLocaleTimeString()
     }
     let prevM = messages
+    let _tempLiveImages = []
 
-    if (chatRelation) {
-      if (image != null) {
-        await firebaseImageUpload(image,null, setImageUploadProgress)
-          .then((res) => {
-            messageObj["liveImage"] = res?.url
-            setMessages((prev) => [...prev, messageObj])
-            setMessageText(null)
-            setImage(null)
-            messageObj['sent'] = true
-            prevM.push(messageObj)
-            let chatData = {
-              lastMessage: messageText || "Sent an image.",
-              messages: prevM,
-              created_at: new Date().toLocaleTimeString()
-            }
-            props?.sendMessage(chatData, chatRelation?.id)
-              .then((res) => {
-                console.log(res)
-              })
-              .catch((e) => {
-                console.log(e)
-              })
-            setImageUploadProgress(null)
-            setSendingMessageLoading(false)
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-      } else {
-        setMessages((prev) => [...prev, messageObj])
-        setMessageText(null)
-        setImage(null)
-        messageObj['sent'] = true
-        prevM.push(messageObj)
-        let chatData = {
-          lastMessage: messageText,
-          messages: prevM,
-          created_at: new Date().toLocaleTimeString()
-        }
-        props?.sendMessage(chatData, chatRelation?.id)
-          .then((res) => {
-            console.log(res)
-          })
-          .catch((e) => {
-            console.log(e)
-          })
-        setSendingMessageLoading(false)
-      }
-
-    } else {
-      if (image != null) {
-        await firebaseImageUpload(image,null, setImageUploadProgress)
-          .then((res) => {
-            messageObj["liveImage"] = res?.url
-            setMessages((prev) => [...prev, messageObj])
-            setMessageText(null)
-            setImage(null)
-            messageObj['sent'] = true
-            prevM.push(messageObj)
-            let chatData = {
-              users: usersIds,
-              messages: prevM,
-              JoinedUsers: [otherUserData?.id, currentUserId],
-              reciever_details: otherUserData,
-              sender_details: currentUser,
-              lastMessage: messageText || "Sent an image.",
-              created_at: new Date().toLocaleTimeString()
-            }
-            props?.createRelation(chatData)
-              .then((res) => {
-                setIsRelationUpdated(true)
-              })
-              .catch((e) => {
-                console.log(e)
-              })
-            setImageUploadProgress(null)
-            setSendingMessageLoading(false)
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-      } else {
-        setMessages((prev) => [...prev, messageObj])
-        setMessageText(null)
-        messageObj['sent'] = true
-        prevM.push(messageObj)
-        let chatData = {
-          users: usersIds,
-          lastMessage: messageText,
-          messages: prevM,
-          JoinedUsers: [otherUserData?.id, currentUserId],
-          reciever_details: otherUserData,
-          sender_details: currentUser,
-          created_at: new Date().toLocaleTimeString()
-        }
-        props?.createRelation(chatData)
-          .then((res) => {
-            setIsRelationUpdated(true)
-          })
-          .catch((e) => {
-            console.log(e)
-          })
-      }
+    let chatData = {
+      lastMessage: messageText || "Sent an image.",
+      messages: prevM,
+      created_at: new Date().toLocaleTimeString()
     }
-    setSendingMessageLoading(false)
+
+    let _newChatData = {
+      users: usersIds,
+      messages: prevM,
+      JoinedUsers: [otherUserData?.id, currentUserId],
+      reciever_details: otherUserData,
+      sender_details: currentUser,
+      lastMessage: messageText || "Sent an image.",
+      created_at: new Date().toLocaleTimeString()
+    }
+    if (!chatRelation) return
+
+    let promises = images?.map(async (item, index) => {
+      return await firebaseImageUpload(item?.uri, null, setImageUploadProgress)
+        .then((res) => {
+          return res;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    });
+
+    if (images?.length > 0) {
+      Promise.all(promises)
+        .then(function (results) {
+          results?.map((item, index) => {
+            _tempLiveImages.push(item?.url)
+          });
+          setMessages((prev) => [...prev, messageObj])
+          messageObj['sent'] = true
+          prevM.push(messageObj)
+          setMessageText(null)
+          setImages(null)
+          messageObj["liveImages"] = _tempLiveImages
+          props?.sendMessage(chatData, chatRelation?.id)
+            .then((res) => {
+              setImageUploadProgress(null)
+              setSendingMessageLoading(false)
+              console.log("Message Sent.", res)
+            })
+            .catch((e) => {
+              console.log(e)
+            })
+        }).catch((e) => {
+          console.log(e);
+        });
+    } else {
+      setMessages((prev) => [...prev, messageObj])
+      messageObj['sent'] = true
+      prevM.push(messageObj)
+      setMessageText(null)
+      setImages(null)
+      props?.sendMessage(chatData, chatRelation?.id)
+        .then((res) => {
+          console.log("Message Sent.", res)
+          setSendingMessageLoading(false)
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    }
   }
 
 
@@ -187,15 +170,14 @@ const ChatScreen = (props) => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: false,
+      allowsMultipleSelection: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0,
     });
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setImages(result.assets);
     }
   };
-
 
   return (
     <View style={styles.container}>
@@ -213,10 +195,19 @@ const ChatScreen = (props) => {
               {
                 memiozedMessages?.map((item, index) => {
                   if (!item?.sent) return <Text key={index}>sending..</Text>
+                  if (item?.images?.length > 0) {
+                    return <MediaChatCard
+                      isSender={item?.sender == currentUserId}
+                      setImageViewer={setImageViewer}
+                      images={item?.images}
+                      key={index}
+                      data={item}
+                    />
+                  }
                   if (item?.sender == currentUserId) {
-                    return <SenderCard setImageViewer={setImageViewer} image={item?.image} key={index} data={item} />
+                    return <SenderCard setImageViewer={setImageViewer} image={null} key={index} data={item} />
                   } else {
-                    return <RecieverCard setImageViewer={setImageViewer} key={index} image={item?.image} data={item} />
+                    return <RecieverCard setImageViewer={setImageViewer} key={index} image={null} data={item} />
                   }
                 })
               }
@@ -230,18 +221,19 @@ const ChatScreen = (props) => {
       >
         <Image
           source={{ uri: imageViewer }}
-          resizeMode="cover"
+          resizeMode="contain"
           style={{ width: '80%', height: '80%' }}
         />
       </TouchableOpacity>}
-      <KeyboardAvoidingView behavior="padding">
-        {image && <MediaSheet imageUploadProgress={imageUploadProgress} image={image} setImage={setImage} />}
+      <KeyboardAvoidingView behavior="position">
+        {images?.length > 0 && <MediaSheet imageUploadProgress={imageUploadProgress} image={images} setImage={setImages} />}
         <TypingComponent
           messageText={messageText}
           setMessageText={setMessageText}
           onSend={onSend}
           pickImage={pickImage}
           sendingMessageLoading={sendingMessageLoading}
+          image={images}
         />
       </KeyboardAvoidingView>
     </View>

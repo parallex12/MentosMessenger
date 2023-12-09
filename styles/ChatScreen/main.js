@@ -22,8 +22,8 @@ export const styles = ({ width, height }) =>
       position: 'absolute',
       zIndex: 999999999,
       backgroundColor: 'rgba(0,0,0,0.5)',
-      alignItems:'center',
-      justifyContent:'center'
+      alignItems: 'center',
+      justifyContent: 'center'
     }
   });
 
@@ -39,11 +39,17 @@ export const mediaSheetStyles = ({ width, height }) =>
       paddingHorizontal: getPercent(3, width),
       borderTopLeftRadius: 10,
       borderTopRightRadius: 10,
-      paddingVertical: getPercent(2, height),
+      paddingVertical: getPercent(1, height),
       flexWrap: 'wrap',
     },
+    itemWrapper: {
+      width: '33%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginVertical: 5
+    },
     imgWrapper: {
-      width: '21%',
+      width: getPercent(25, width),
       height: getPercent(8, height),
       borderRadius: 6,
       borderWidth: 1,
@@ -61,6 +67,18 @@ export const mediaSheetStyles = ({ width, height }) =>
       position: 'absolute',
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    progressWrapper: {
+      width: '80%',
+      height: getPercent(1, height),
+      borderRadius: getPercent(10, height),
+      backgroundColor: '#c2c2c2',
+      overflow: 'hidden'
+    },
+    progressBar: {
+      width: '0%',
+      height: '100%',
+      backgroundColor: '#011A51'
     }
   });
 
@@ -72,7 +90,7 @@ export const senderCardStyles = ({ width, height }) =>
       maxWidth: '80%',
       minHeight: getPercent(5, height),
       borderRadius: 6,
-      backgroundColor: '#C2C6CC',
+      backgroundColor: '#0584FE',
       paddingHorizontal: getPercent(3, width),
       paddingVertical: getPercent(1, height),
       alignItems: 'center',
@@ -97,9 +115,9 @@ export const senderCardStyles = ({ width, height }) =>
       color: '#222',
     },
     text: {
-      fontSize: rf(12),
-      fontFamily: 'Regular',
-      color: '#222',
+      fontSize: rf(13),
+      fontFamily: 'Medium',
+      color: '#fff',
       lineHeight: 25
     },
     profileImg: {
@@ -116,6 +134,120 @@ export const senderCardStyles = ({ width, height }) =>
   });
 
 
+//mediaChatCardStyles  starts here
+export const mediaChatCardStyles = ({ width, height }) =>
+  StyleSheet.create({
+    boxWrapper: {
+      maxWidth: '100%',
+      minHeight: getPercent(15, height),
+      borderRadius: 6,
+      alignItems: 'center',
+      marginVertical: getPercent(0.5, height),
+      alignSelf: 'flex-end',
+      flexDirection: 'row',
+      flexWrap: 'wrap'
+    },
+    container: {
+      maxWidth: '75%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginVertical: getPercent(0.5, height),
+      alignSelf: 'flex-end',
+      backgroundColor: '#0584FE',
+      borderRadius: 6,
+      padding: 5
+    },
+    actionsWrapper: {
+      alignSelf: 'flex-end',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    time: {
+      fontSize: rf(8),
+      fontFamily: 'Regular',
+      color: '#fff',
+    },
+    text: {
+      fontSize: rf(13),
+      fontFamily: 'Medium',
+      color: '#fff',
+      alignSelf: 'flex-start',
+      paddingHorizontal: getPercent(1, width)
+    },
+    profileImg: {
+      width: '100%',
+      height: '100%'
+    },
+    imageWrapper: {
+      flex: 1,
+      minWidth: '25%',
+      height: getPercent(14, height),
+      borderRadius: 10,
+      flexDirection: 'row',
+      overflow: 'hidden',
+      marginHorizontal: 5,
+      marginBottom: 10
+    }
+  });
+
+
+
+//mediaChatCardRecieverStyles  starts here
+export const mediaChatCardRecieverStyles = ({ width, height }) =>
+  StyleSheet.create({
+    boxWrapper: {
+      maxWidth: '100%',
+      minHeight: getPercent(15, height),
+      borderRadius: 6,
+      alignItems: 'center',
+      marginVertical: getPercent(0.5, height),
+      flexDirection: 'row',
+      flexWrap: 'wrap'
+    },
+    container: {
+      maxWidth: '75%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginVertical: getPercent(0.5, height),
+      alignSelf: 'flex-start',
+      backgroundColor: '#C2C6CC',
+      borderRadius: 6,
+      padding: 5
+    },
+    actionsWrapper: {
+      alignSelf: 'flex-end',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    time: {
+      fontSize: rf(8),
+      fontFamily: 'Regular',
+      color: '#525357',
+    },
+    text: {
+      fontSize: rf(13),
+      fontFamily: 'Medium',
+      color: '#525357',
+      alignSelf: 'flex-start',
+      paddingHorizontal: getPercent(1, width)
+    },
+    profileImg: {
+      width: '100%',
+      height: '100%'
+    },
+    imageWrapper: {
+      flex: 1,
+      minWidth: '25%',
+      height: getPercent(14, height),
+      borderRadius: 10,
+      flexDirection: 'row',
+      overflow: 'hidden',
+      marginHorizontal: 5,
+      marginBottom: 10
+    }
+  });
+
+
 //recieverCardStyles  starts here
 export const recieverCardStyles = ({ width, height }) =>
   StyleSheet.create({
@@ -124,7 +256,7 @@ export const recieverCardStyles = ({ width, height }) =>
       maxWidth: '80%',
       minHeight: getPercent(5, height),
       borderRadius: 6,
-      backgroundColor: '#011A51',
+      backgroundColor: '#C2C6CC',
       paddingHorizontal: getPercent(3, width),
       paddingVertical: getPercent(1, height),
       alignItems: 'center',
@@ -147,9 +279,9 @@ export const recieverCardStyles = ({ width, height }) =>
       color: '#222',
     },
     text: {
-      fontSize: rf(12),
-      fontFamily: 'Regular',
-      color: '#FFFFFF',
+      fontSize: rf(13),
+      fontFamily: 'Medium',
+      color: '#525357',
       lineHeight: 25
     },
     profileImg: {
@@ -204,7 +336,8 @@ export const headerStyles = ({ width, height }) =>
       width: getPercent(5, height),
       height: getPercent(5, height),
       borderRadius: 100,
-      borderWidth: 1
+      borderWidth: 1,
+      overflow:'hidden'
     },
     profileImg: {
       width: '100%',
@@ -258,7 +391,7 @@ export const typingComponentStyles = ({ width, height }) =>
       overflow: 'hidden'
     },
     inputField: {
-      width: '82%',
+      width: '75%',
       paddingHorizontal: 10,
       fontSize: rf(12),
       fontFamily: 'Medium',
@@ -266,11 +399,17 @@ export const typingComponentStyles = ({ width, height }) =>
       textAlignVertical: 'center'
     },
     sendBtn: {
-      width: getPercent(4, height),
-      height: getPercent(4, height),
+      minWidth: getPercent(4, height),
+      minHeight: getPercent(4, height),
       borderRadius: 100,
-      backgroundColor: '#011A51',
+      backgroundColor: '#0584FE',
       alignItems: 'center',
       justifyContent: 'center'
+    },
+    sendText: {
+      paddingHorizontal: 20,
+      fontSize: rf(12),
+      fontFamily: 'Medium',
+      color: '#fff',
     }
   });

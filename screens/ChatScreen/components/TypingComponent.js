@@ -5,7 +5,7 @@ import { FontAwesome, Entypo } from '@expo/vector-icons';
 import { RFValue } from "react-native-responsive-fontsize";
 
 const TypingComponent = (props) => {
-    let {sendingMessageLoading, messageText, pickImage, onSend, setMessageText } = props;
+    let {image,sendingMessageLoading, messageText, pickImage, onSend, setMessageText } = props;
     let { width, height } = useWindowDimensions();
     let styles = _styles({ width, height });
 
@@ -29,6 +29,9 @@ const TypingComponent = (props) => {
                     {
                         sendingMessageLoading ?
                             <ActivityIndicator size="small" color="#fff" />
+                            :
+                            image?
+                            <Text style={styles.sendText}>Send</Text>
                             :
                             <FontAwesome name="send" size={RFValue(12)} color="#fff" />
                     }

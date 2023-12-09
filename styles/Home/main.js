@@ -144,7 +144,6 @@ export const messageCardStyles = ({ width, height }) =>
       overflow: 'hidden',
       borderWidth: 2,
       borderColor: '#011A51',
-      padding: 2
     },
     activeIcon: {
       width: getPercent(2, height),

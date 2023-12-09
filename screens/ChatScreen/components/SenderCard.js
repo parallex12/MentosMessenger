@@ -7,7 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { getSentTimeFormat } from "../../../middleware";
 
 const SenderCard = (props) => {
-    let { data,setImageViewer, image } = props;
+    let { data, setImageViewer, image } = props;
     let { width, height } = useWindowDimensions();
     let styles = _styles({ width, height });
     let navigation = useNavigation()
@@ -18,7 +18,7 @@ const SenderCard = (props) => {
             <View style={styles.boxWrapper}>
                 {
                     image ?
-                        <TouchableOpacity style={styles.imageWrapper} onPress={() => setImageViewer(data?.image)}>
+                        <TouchableOpacity style={styles.imageWrapper} onPress={() => setImageViewer(image)}>
                             <Image
                                 source={{ uri: image }}
                                 resizeMode="cover"

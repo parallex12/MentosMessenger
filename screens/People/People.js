@@ -5,10 +5,10 @@ import { SignOut } from "../../state-management/actions/auth";
 import Search from "./components/Search";
 import MessageCard from "./components/MessageCard";
 import BottomMenu from "../../globalComponents/BottomMenu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PeopleCard from "./components/PeopleCard";
 import Header from "../Home/components/Header";
-import { searchAgent } from "../../state-management/actions/features";
+import { getAnyUser, searchAgent } from "../../state-management/actions/features";
 import { getAuth } from "firebase/auth";
 
 const People = (props) => {
@@ -24,6 +24,7 @@ const People = (props) => {
       .then((res) => setSearchedUsers(res))
       .catch((e) => console.log(e))
   }
+
 
   return (
     <View style={styles.container}>

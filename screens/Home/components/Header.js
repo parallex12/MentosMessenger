@@ -6,16 +6,15 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { useNavigation } from "@react-navigation/native";
 
 const Header = (props) => {
-    let { title } = props;
-    let { width, height } = useWindowDimensions();
+    let { title, width, height } = useWindowDimensions();
     let styles = _styles({ width, height });
     let navigation = useNavigation()
-
+    let profile = props?.get_user_details?.profile
     return (
         <View style={styles.container}>
             <TouchableOpacity style={styles.profileWrapper} onPress={() => navigation.navigate("Profile")}>
                 <Image
-                    source={require("../../../assets/profile.png")}
+                    source={profile ? { uri: profile } : require("../../../assets/profile.png")}
                     resizeMode="cover"
                     style={{ width: '100%', height: '100%' }}
                 />
@@ -32,5 +31,7 @@ const Header = (props) => {
 
 const mapStateToProps = (state) => ({
     errors: state.errors.errors,
+    get_user_details: state.main.get_user_details,
+
 });
 export default connect(mapStateToProps, {})(Header);

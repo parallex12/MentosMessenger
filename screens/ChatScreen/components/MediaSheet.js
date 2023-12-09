@@ -19,18 +19,38 @@ const MediaSheet = (props) => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.imgWrapper}>
-                <Image
-                    source={{ uri: image }}
-                    resizeMode="cover"
-                    style={{ width: '100%', height: '100%' }}
-                />
-                <TouchableOpacity style={styles.deleteBtn} onPress={() => onDelete()}>
-                    <AntDesign name="delete" size={RFValue(13)} color="#fff" />
-                </TouchableOpacity>
-            </View>
+            {
+                image?.map((item, index) => {
+                    return <View style={styles.itemWrapper} key={index}>
+                        <View style={styles.imgWrapper}>
+                            <Image
+                                source={{ uri: item.uri }}
+                                resizeMode="cover"
+                                style={{ width: '100%', height: '100%' }}
+                            />
+                            <TouchableOpacity style={styles.deleteBtn} onPress={() => onDelete()}>
+                                <AntDesign name="delete" size={RFValue(13)} color="#fff" />
+                            </TouchableOpacity>
+                        </View>
 
-            <Text>{`Uploading ${imageUploadProgress || 0}%`}</Text>
+                        {/* <Text>{`Uploading ${imageUploadProgress || 0}%`}</Text> */}
+                        <View style={styles.progressWrapper}>
+                            <View
+                                style={
+                                    [
+                                        styles.progressBar,
+                                        {
+                                            width: `${imageUploadProgress ? imageUploadProgress : 0}%`
+                                        }
+                                    ]
+                                }
+                            >
+
+                            </View>
+                        </View>
+                    </View>
+                })
+            }
         </View>
     )
 };

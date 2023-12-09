@@ -19,7 +19,7 @@ const Header = (props) => {
             <View style={styles.detailsWrapper}>
                 <View style={styles.profile}>
                     <Image
-                        source={require("../../../assets/profile.png")}
+                        source={data?.profile ? { uri: data?.profile } : require("../../../assets/profile.png")}
                         resizeMode="cover"
                         style={styles.profileImg}
                     />

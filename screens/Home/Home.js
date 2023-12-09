@@ -34,7 +34,7 @@ const Home = (props) => {
 
   return (
     <View style={styles.container}>
-      <Header title="Chat" />
+      <Header title="Chat" data={props?.get_user_details} />
       <View style={styles.content}>
         <Search onChangeText={(val) => onSearch(val)} />
         {

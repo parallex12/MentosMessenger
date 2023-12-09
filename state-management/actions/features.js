@@ -56,6 +56,24 @@ export const getCurrentUser = (setLoading) => async (dispatch) => {
     }
 };
 
+export const getAnyUser = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const db = getFirestore();
+            const docRef = doc(db, "users", id);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                resolve({ ...docSnap.data(), id: docSnap?.id })
+            } else {
+                reject(404)
+                console.log("No such document!");
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+};
+
 
 export const searchAgent = (id, setLoading) => async (dispatch) => {
     return new Promise(async (resolve, reject) => {
@@ -92,7 +110,7 @@ export const getRelation = (users) => async (dispatch) => {
                     resolve({ id: doc.id, data: doc.data() })
                 });
             } else {
-                resolve(null)
+                resolve(404)
             }
         } catch (e) {
             console.log(e.message);
@@ -107,7 +125,7 @@ export const sendMessage = (data, id) => async (dispatch) => {
         try {
             const db = getFirestore();
             const chatRef = doc(db, "chats", id);
-           
+
             await updateDoc(chatRef, data)
                 .then((res) => {
                     resolve(res)
