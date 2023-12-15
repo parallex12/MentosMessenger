@@ -1,5 +1,5 @@
 import { addDoc, collection, doc, getDoc, getDocs, getFirestore, onSnapshot, query, setDoc, updateDoc, where } from "firebase/firestore";
-import { GET_ALL_CHATS, GET_ALL_USERS, GET_ERRORS, GET_USER_DETAILS } from "../types/types";
+import { GET_ALL_CHATS, GET_ALL_CONTACTS, GET_ALL_USERS, GET_ERRORS, GET_USER_DETAILS } from "../types/types";
 import { getAuth } from "firebase/auth";
 import { firebaseImageUpload } from "../../middleware";
 
@@ -68,6 +68,38 @@ export const getAnyUser = (id) => {
                 reject(404)
                 console.log("No such document!");
             }
+
+
+        } catch (e) {
+            reject(e)
+        }
+    })
+};
+
+export const getUpdatesOnContacts = () => async (dispatch) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const db = getFirestore();
+                    const user = getAuth().currentUser
+                    const q = query(collection(db, "users"), where("contacts", "array-contains", user?.uid));
+                    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+                        let data = [];
+                        querySnapshot.forEach((doc) => {
+                            let d = { ...doc.data(), id: doc.id }
+                            data.push(d);
+                        });
+                        resolve(data)
+                        dispatch({ type: GET_ALL_CONTACTS, payload: data })
+                    });
+
+                } catch (e) {
+                    console.log(e.message);
+                    reject(e)
+                    dispatch({ type: GET_ERRORS, payload: e.message });
+                }
+            })
         } catch (e) {
             reject(e)
         }
@@ -125,7 +157,26 @@ export const sendMessage = (data, id) => async (dispatch) => {
         try {
             const db = getFirestore();
             const chatRef = doc(db, "chats", id);
+            await updateDoc(chatRef, data)
+                .then((res) => {
+                    resolve(res)
+                })
+                .catch((e) => {
+                    reject(e)
+                })
+        } catch (e) {
+            console.log(e.message);
+            reject(e)
+            dispatch({ type: GET_ERRORS, payload: e.message });
+        }
+    })
+};
 
+export const updateStatus = (data, id) => async (dispatch) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const db = getFirestore();
+            const chatRef = doc(db, "chats", id);
             await updateDoc(chatRef, data)
                 .then((res) => {
                     resolve(res)
@@ -170,6 +221,13 @@ export const createRelation = (data) => async (dispatch) => {
         try {
             const db = getFirestore();
             const docRef = await addDoc(collection(db, "chats"), data);
+            const userRef1 = doc(db, "users", data?.reciever_details?.id);
+            const userRef2 = doc(db, "users", data?.sender_details?.id);
+            let r_contacts=data?.reciever_details?.contacts || []
+            let s_contacts=data?.data?.sender_details?.contacts || []
+            await updateDoc(userRef1, { contacts: [...r_contacts, data?.sender_details?.id] })
+            await updateDoc(userRef2, { contacts: [...s_contacts, data?.reciever_details?.id] })
+
             if (docRef?.id) {
                 resolve(docRef.id)
             } else {

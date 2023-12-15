@@ -124,7 +124,7 @@ const ChatScreen = (props) => {
           console.log(e);
         });
     });
-
+    
     if (images?.length > 0) {
       Promise.all(promises)
         .then(function (results) {

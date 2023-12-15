@@ -1,4 +1,4 @@
-import { ActivityIndicator, Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
+import { ActivityIndicator, Text, AppState, View, useWindowDimensions } from "react-native";
 import { connect } from "react-redux";
 import { styles as _styles } from "../../styles/Home/main";
 import { SignOut } from "../../state-management/actions/auth";
@@ -6,12 +6,13 @@ import Header from "./components/Header";
 import Search from "./components/Search";
 import MessageCard from "./components/MessageCard";
 import BottomMenu from "../../globalComponents/BottomMenu";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import PeopleCard from "./components/PeopleCard";
 import { getCurrentUser, getMyChats } from "../../state-management/actions/features";
 import { loaderStyles } from "../../styles/Global/main";
-import { searchAgent } from "../../state-management/actions/features";
+import { searchAgent, updateUser, getUpdatesOnContacts } from "../../state-management/actions/features";
 import { getAuth } from "firebase/auth";
+import Contacts from "./components/Contacts";
 
 const Home = (props) => {
   let { } = props;
@@ -20,13 +21,43 @@ const Home = (props) => {
   const [chats, setChats] = useState([])
   const [searchText, setSearchText] = useState(null)
   const [loading, setLoading] = useState(true)
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   useEffect(() => {
     props?.getMyChats()
+    props?.getUpdatesOnContacts()
     props?.getCurrentUser(setLoading)
       .then((res) => console.log(res))
       .catch((e) => console.log(e))
+
+    props?.updateUser({ online: true }, getAuth().currentUser.uid)
   }, [])
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        console.log('App has come to the foreground!');
+      }
+
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+      console.log('AppState', appState.current);
+      if (appState.current == "active") {
+        props?.updateUser({ online: true }, getAuth().currentUser.uid)
+      } else {
+        props?.updateUser({ online: false }, getAuth().currentUser.uid)
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
 
 
   let memoizedChats = useMemo(() => {
@@ -37,6 +68,7 @@ const Home = (props) => {
     <View style={styles.container}>
       <Header title="Chat" plusIcon data={props?.get_user_details} />
       <View style={styles.content}>
+        {props?.get_all_contacts?.length > 0 && <Contacts />}
         <Search onChangeText={(val) => setSearchText(val.toLowerCase())} />
         {
           loading ?
@@ -80,5 +112,6 @@ const mapStateToProps = (state) => ({
   errors: state.errors.errors,
   get_all_chats: state.main.get_all_chats,
   get_user_details: state.main.get_user_details,
+  get_all_contacts: state.main.get_all_contacts,
 });
-export default connect(mapStateToProps, { SignOut, getCurrentUser, searchAgent, getMyChats })(Home);
+export default connect(mapStateToProps, { SignOut, getCurrentUser, getUpdatesOnContacts, searchAgent, getMyChats, updateUser })(Home);

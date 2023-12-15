@@ -14,11 +14,11 @@ export const styles = ({ width, height }) =>
       paddingHorizontal: getPercent(5, width),
       paddingBottom: getPercent(1, height)
     },
-    subTitle:{
+    subTitle: {
       fontSize: rf(15),
       fontFamily: 'Regular',
       color: '#222',
-      marginTop:10
+      marginTop: 10
     },
     emptyCont: {
       width: '100%',
@@ -41,6 +41,61 @@ export const styles = ({ width, height }) =>
       flex: 1,
     }
   });
+
+
+
+//contactsStyles starts here
+export const contactsStyles = ({ width, height }) =>
+  StyleSheet.create({
+    container: {
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      paddingVertical: 10
+    },
+    profileCont: {
+      width: getPercent(8, height),
+      height: getPercent(8, height),
+      padding: 2,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    userWrapper: {
+      minWidth:getPercent(10, height),
+      minHeight:getPercent(8, height),
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight:5
+    },
+    profileWrapper: {
+      width: getPercent(7, height),
+      height: getPercent(7, height),
+      borderWidth: 1,
+      borderColor:"#011A51",
+      borderRadius: 100,
+      overflow: 'hidden',
+      alignItems:'center',
+      justifyContent:'center'
+    },
+    name: {
+      fontSize: rf(11),
+      color: '#222',
+      fontFamily: 'Medium',
+      marginTop: 3
+    },
+    activeIcon: {
+      width: getPercent(2, height),
+      height: getPercent(2, height),
+      borderRadius: 100,
+      backgroundColor: '#5AD439',
+      position: 'absolute',
+      bottom: 0,
+      right: 8,
+      borderWidth: 2,
+      borderColor: '#fff'
+    },
+  })
 
 //headerStyles starts here
 export const headerStyles = ({ width, height }) =>
@@ -106,7 +161,7 @@ export const searchStyles = ({ width, height }) =>
       paddingHorizontal: getPercent(5, width),
       alignItems: 'center',
       justifyContent: 'flex-start',
-      marginVertical: getPercent(2, height),
+      marginVertical: getPercent(1, height),
       flexDirection: 'row'
     },
     inputCont: {
@@ -208,8 +263,8 @@ export const messageCardStyles = ({ width, height }) =>
       height: getPercent(8, width),
       backgroundColor: '#011A51',
       borderRadius: 100,
-      alignItems:'center',
-      justifyContent:'center'
+      alignItems: 'center',
+      justifyContent: 'center'
     }
 
   });

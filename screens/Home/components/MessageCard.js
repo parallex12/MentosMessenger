@@ -6,7 +6,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { useNavigation } from "@react-navigation/native";
 import { getSentTimeFormat } from "../../../middleware";
 import { getAuth } from "firebase/auth";
-import { getAnyUser } from "../../../state-management/actions/features";
+import { getAnyUser,updateStatus } from "../../../state-management/actions/features";
 import { useEffect, useState } from "react";
 
 const MessageCard = (props) => {
@@ -29,6 +29,8 @@ const MessageCard = (props) => {
             })
         }
     }, [userDetails])
+
+
 
     return (
         <TouchableOpacity style={styles.container} onPress={onPress}>
@@ -53,4 +55,4 @@ const MessageCard = (props) => {
 const mapStateToProps = (state) => ({
     errors: state.errors.errors,
 });
-export default connect(mapStateToProps, { getAnyUser })(MessageCard);
+export default connect(mapStateToProps, { getAnyUser,updateStatus })(MessageCard);
