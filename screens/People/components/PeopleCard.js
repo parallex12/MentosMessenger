@@ -37,7 +37,7 @@ const PeopleCard = (props) => {
                         style={{ width: '100%', height: '100%' }}
                     />
                 </View>
-                <View style={styles.activeIcon}></View>
+                {/* <View style={styles.activeIcon}></View> */}
             </View>
             <View style={styles.textContent}>
                 <Text style={styles.userName}>{updatedUserData?.name}</Text>

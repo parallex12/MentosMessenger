@@ -61,7 +61,8 @@ export const styles = ({ width, height }) =>
     slugId: {
       fontSize: rf(14),
       fontFamily: 'Regular',
-      color: '#6F7175'
+      color: '#6F7175',
+      marginVertical:2
     },
     actionsWrapper: {
       flex: 1,

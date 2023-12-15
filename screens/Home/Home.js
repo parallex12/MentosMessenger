@@ -6,7 +6,7 @@ import Header from "./components/Header";
 import Search from "./components/Search";
 import MessageCard from "./components/MessageCard";
 import BottomMenu from "../../globalComponents/BottomMenu";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PeopleCard from "./components/PeopleCard";
 import { getCurrentUser, getMyChats } from "../../state-management/actions/features";
 import { loaderStyles } from "../../styles/Global/main";
@@ -18,6 +18,7 @@ const Home = (props) => {
   let { width, height } = useWindowDimensions();
   let styles = _styles({ width, height });
   const [chats, setChats] = useState([])
+  const [searchText, setSearchText] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -28,15 +29,15 @@ const Home = (props) => {
   }, [])
 
 
-  const onSearch = (val) => {
-    console.log(val)
-  }
+  let memoizedChats = useMemo(() => {
+    return props?.get_all_chats
+  }, [props?.get_all_chats])
 
   return (
     <View style={styles.container}>
-      <Header title="Chat" data={props?.get_user_details} />
+      <Header title="Chat" plusIcon data={props?.get_user_details} />
       <View style={styles.content}>
-        <Search onChangeText={(val) => onSearch(val)} />
+        <Search onChangeText={(val) => setSearchText(val.toLowerCase())} />
         {
           loading ?
             <View style={loaderStyles?.container}>
@@ -44,7 +45,7 @@ const Home = (props) => {
             </View>
             :
             <>
-              {props?.get_all_chats == null && <View style={styles.emptyCont}>
+              {memoizedChats == null && <View style={styles.emptyCont}>
                 <Text style={styles.emptyTitle}>Get Started</Text>
                 <Text style={styles.emptyText}>Tap + to send a messege.</Text>
               </View>}
@@ -52,9 +53,17 @@ const Home = (props) => {
                 props?.get_all_chats?.length > 0 &&
                 <View style={styles.chatsWrapper}>
                   {
-                    props?.get_all_chats?.map((item, index) => {
-                      return <MessageCard data={item} key={index} />
-                    })
+                    props?.get_all_chats?.
+                      filter((e) => {
+                        let senderName = e?.reciever_details?.name.toLowerCase()
+                        if (searchText?.length == 0 || searchText == null) return e
+                        return senderName.includes(searchText)
+                      })
+                      .map((item, index) => {
+                        let isConversationAvailable = item?.messages?.length > 0
+                        if (!isConversationAvailable) return
+                        return <MessageCard data={item} key={index} />
+                      })
                   }
                 </View>
               }

@@ -1,4 +1,4 @@
-import { useWindowDimensions } from "react-native";
+import { Share, useWindowDimensions } from "react-native";
 import { Entypo, MaterialIcons, AntDesign } from '@expo/vector-icons';
 import { RFValue } from "react-native-responsive-fontsize";
 import { SignOut } from "../state-management/actions/auth";
@@ -92,13 +92,13 @@ export const settingsOptions = [
     title: "Change Bio",
     slug: "Tell us about yourself.",
     icon: <Entypo name="users" size={RFValue(15)} color="#fff" />,
-    onPress: () => null
+    onPress: (props) => props?.navigation.navigate("ChangeBio")
   },
   {
     title: "Change Password",
     slug: "Secure your account.",
     icon: <Entypo name="lock" size={RFValue(15)} color="#fff" />,
-    onPress: () => null
+    onPress: (props) => props?.navigation.navigate("ChangePassword")
   },
   {
     title: "Email Address",
@@ -107,23 +107,35 @@ export const settingsOptions = [
     onPress: () => null
   },
   {
-    title: "Change Password",
-    slug: "Secure your account.",
-    icon: <Entypo name="lock" size={RFValue(15)} color="#fff" />,
-    onPress: () => null
-  },
-  {
     title: "Invite Friends",
     slug: "Bring your friends to real world.",
     icon: <Entypo name="share" size={RFValue(15)} color="#fff" />,
-    onPress: () => null
+    onPress: async () => {
+      try {
+        const result = await Share.share({
+          message:
+            'Mentos Messenger connect to real world.',
+        });
+        if (result.action === Share.sharedAction) {
+          if (result.activityType) {
+            // shared with activity type of result.activityType
+          } else {
+            // shared
+          }
+        } else if (result.action === Share.dismissedAction) {
+          // dismissed
+        }
+      } catch (error) {
+        Alert.alert(error.message);
+      }
+    }
   },
 
   {
     title: "Contact Support",
     slug: "24/7 Available for you.",
     icon: <MaterialIcons name="support-agent" size={RFValue(20)} color="#fff" />,
-    onPress: () => null
+    onPress: () => alert("Not available at the moment.")
   },
   {
     title: "Logout",
@@ -134,11 +146,12 @@ export const settingsOptions = [
 ]
 
 export const getSentTimeFormat = (time) => {
-  let _temptime = time
-  let _tempTimeDigits = _temptime?.slice(0, _temptime?.indexOf(":") + 3)
-  let _tempTimeZone = _temptime?.slice(_temptime?.indexOf(" ") - 1)
-  let sentTime = _tempTimeDigits + " " + _tempTimeZone
-  return sentTime
+  let splittedTime = time.split(":")
+  let _hours = splittedTime[0]
+  let _minutes = splittedTime[1]
+  let _zone = splittedTime[2].slice(3)
+
+  return _hours + ":" + _minutes + " " + _zone
 }
 
 // declare all characters

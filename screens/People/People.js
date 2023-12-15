@@ -5,7 +5,7 @@ import { SignOut } from "../../state-management/actions/auth";
 import Search from "./components/Search";
 import MessageCard from "./components/MessageCard";
 import BottomMenu from "../../globalComponents/BottomMenu";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PeopleCard from "./components/PeopleCard";
 import Header from "../Home/components/Header";
 import { getAnyUser, searchAgent } from "../../state-management/actions/features";
@@ -25,15 +25,20 @@ const People = (props) => {
       .catch((e) => console.log(e))
   }
 
+  let memoizedChats = useMemo(() => {
+    return props?.get_all_chats
+  }, [props?.get_all_chats])
+
 
   return (
     <View style={styles.container}>
-      <Header title="Find People" />
+      <Header title={props?.get_user_details?.agentId ? "Contacts" : "Find People"} />
       <View style={styles.content}>
         {!props?.get_user_details?.agentId && <Search onChangeText={(val) => onSearch(val)} />}
         {searchedUsers?.length == 0 && props?.get_all_chats?.length == 0 && <View style={styles.emptyCont}>
           <Text style={styles.emptyTitle}>Get Started</Text>
-          <Text style={styles.emptyText}>Type id to find anyone</Text>
+         {!props?.get_user_details?.agentId && <Text style={styles.emptyText}>Type id to find anyone</Text>}
+         {props?.get_user_details?.agentId && <Text style={styles.emptyText}>Your contacts will show here</Text>}
         </View>}
         {
           props?.get_all_chats?.length > 0 && searchedUsers?.length == 0 &&
@@ -41,9 +46,11 @@ const People = (props) => {
             <Text style={styles.subTitle}>My Contacts</Text>
             <View style={styles.chatsWrapper}>
               {
-                props?.get_all_chats?.map((item, index) => {
+                memoizedChats?.map((item, index) => {
                   let me = getAuth().currentUser
                   let userDetails = me?.email == item?.reciever_details?.email ? item?.sender_details : item?.reciever_details
+                  let isConversationAvailable = item?.messages?.length > 0
+                  if (!isConversationAvailable) return
                   return <PeopleCard key={index} data={userDetails} />
                 })
               }

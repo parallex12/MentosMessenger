@@ -101,6 +101,7 @@ const Profile = (props) => {
           </TouchableOpacity>
           <Text style={styles.username}>{props?.get_user_details?.name}</Text>
           {agent_ID && <Text style={styles.slugId}>#{agent_ID}</Text>}
+          {agent_ID && <Text style={styles.slugId}>Users can find you through this id.</Text>}
         </View>
         <View style={styles.actionsWrapper}>
           <Text style={styles.label}>Settings</Text>

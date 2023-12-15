@@ -6,10 +6,12 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { useNavigation } from "@react-navigation/native";
 
 const Header = (props) => {
-    let { title, width, height } = useWindowDimensions();
+    let { title, plusIcon } = props
+    let { width, height } = useWindowDimensions();
     let styles = _styles({ width, height });
     let navigation = useNavigation()
     let profile = props?.get_user_details?.profile
+
     return (
         <View style={styles.container}>
             <TouchableOpacity style={styles.profileWrapper} onPress={() => navigation.navigate("Profile")}>
@@ -21,9 +23,11 @@ const Header = (props) => {
             </TouchableOpacity>
             <Text style={styles.title}>{title}</Text>
             <View style={styles.actionWrapper}>
-                <TouchableOpacity style={styles.editBtn}>
-                    <Entypo name="plus" size={RFValue(15)} color="#979797" />
-                </TouchableOpacity>
+                {plusIcon &&
+                    <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate("People")}>
+                        <Entypo name="plus" size={RFValue(15)} color="#979797" />
+                    </TouchableOpacity>
+                }
             </View>
         </View>
     )

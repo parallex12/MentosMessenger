@@ -15,7 +15,6 @@ const RecieverCard = (props) => {
     let navigation = useNavigation()
     let sentTime = getSentTimeFormat(data?.created_at)
     const [imageLoader, setImageLoader] = useState(true)
-
     return (
         <View style={styles.container}>
             <View style={styles.boxWrapper}>

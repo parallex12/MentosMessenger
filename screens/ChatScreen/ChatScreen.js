@@ -13,6 +13,7 @@ import * as ImagePicker from 'expo-image-picker';
 import MediaSheet from "./components/MediaSheet";
 import { firebaseImageUpload } from "../../middleware";
 import MediaChatCard from "./components/MediaChatCard";
+import { loaderStyles } from "../../styles/Global/main";
 
 const ChatScreen = (props) => {
   let { } = props;
@@ -27,6 +28,7 @@ const ChatScreen = (props) => {
   const [messageText, setMessageText] = useState(null)
   const [chatRelation, setChatRelation] = useState(null)
   const [imageViewer, setImageViewer] = useState(false)
+  const [imageViewerLoading, setImageViewerLoading] = useState(true)
   const [chatData, setChatData] = useState(null)
   const [messages, setMessages] = useState([])
   const [imageUploadProgress, setImageUploadProgress] = useState(null)
@@ -71,9 +73,8 @@ const ChatScreen = (props) => {
       const db = getFirestore();
       const unsub = onSnapshot(doc(db, "chats", chatRelation?.id), (doc) => {
         console.log("You are connected to chat.")
-        console.log(doc.data())
-        setChatData(doc.data())
         setMessages(doc.data()?.messages)
+        setLoading(false)
       });
       return () => unsub()
     }
@@ -196,10 +197,11 @@ const ChatScreen = (props) => {
                 memiozedMessages?.map((item, index) => {
                   if (!item?.sent) return <Text key={index}>sending..</Text>
                   if (item?.images?.length > 0) {
+                    let isSender = item?.sender == currentUserId
                     return <MediaChatCard
-                      isSender={item?.sender == currentUserId}
+                      isSender={isSender}
                       setImageViewer={setImageViewer}
-                      images={item?.images}
+                      images={isSender ? item?.images : item?.liveImages}
                       key={index}
                       data={item}
                     />
@@ -219,12 +221,18 @@ const ChatScreen = (props) => {
         style={styles.imageViewer}
         onPress={() => setImageViewer(null)}
       >
+        {imageViewerLoading && <View style={loaderStyles.container}>
+          <ActivityIndicator size="large" color="#fff" />
+        </View>}
         <Image
           source={{ uri: imageViewer }}
           resizeMode="contain"
           style={{ width: '80%', height: '80%' }}
+          onLoadStart={() => setImageViewerLoading(true)}
+          onLoad={() => setImageViewerLoading(false)}
         />
-      </TouchableOpacity>}
+      </TouchableOpacity>
+      }
       <KeyboardAvoidingView behavior="position">
         {images?.length > 0 && <MediaSheet imageUploadProgress={imageUploadProgress} image={images} setImage={setImages} />}
         <TypingComponent

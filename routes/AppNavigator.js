@@ -5,6 +5,8 @@ import Home from "../screens/Home/Home";
 import ChatScreen from "../screens/ChatScreen/ChatScreen";
 import Profile from "../screens/Profile/Profile";
 import People from "../screens/People/People";
+import ChangePassword from "../screens/ChangePassword/ChangePassword";
+import ChangeBio from "../screens/ChangeBio/ChangeBio";
 
 const { Navigator, Screen } = createStackNavigator();
 
@@ -15,6 +17,8 @@ function AppNavigation() {
       <Screen name="ChatScreen" component={ChatScreen} />
       <Screen name="Profile" component={Profile} />
       <Screen name="People" component={People} />
+      <Screen name="ChangePassword" component={ChangePassword} />
+      <Screen name="ChangeBio" component={ChangeBio} />
     </Navigator>
   );
 }

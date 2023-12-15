@@ -18,11 +18,10 @@ const MediaChatCard = (props) => {
             <View style={styles.boxWrapper}>
                 {
                     images?.map((item, index) => {
-
                         return (
-                            <TouchableOpacity key={index} style={styles.imageWrapper} onPress={() => setImageViewer(item.uri)}>
+                            <TouchableOpacity key={index} style={styles.imageWrapper} onPress={() => setImageViewer(item.uri || item)}>
                                 <Image
-                                    source={{ uri: item.uri }}
+                                    source={{ uri: item.uri || item }}
                                     resizeMode="cover"
                                     style={styles.profileImg}
                                 />
