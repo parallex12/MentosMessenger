@@ -6,11 +6,11 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { useNavigation } from "@react-navigation/native";
 import { getSentTimeFormat } from "../../../middleware";
 import { getAuth } from "firebase/auth";
-import { getAnyUser,updateStatus } from "../../../state-management/actions/features";
+import { getAnyUser, updateStatus } from "../../../state-management/actions/features";
 import { useEffect, useState } from "react";
 
 const MessageCard = (props) => {
-    let { data } = props;
+    let { data, newMessages } = props;
     let { width, height } = useWindowDimensions();
     let styles = _styles({ width, height });
     let navigation = useNavigation()
@@ -30,8 +30,7 @@ const MessageCard = (props) => {
         }
     }, [userDetails])
 
-
-
+    console.log(newMessages)
     return (
         <TouchableOpacity style={styles.container} onPress={onPress}>
             <View style={styles.profileWrapper}>
@@ -47,6 +46,8 @@ const MessageCard = (props) => {
             </View>
             <View style={styles.timeContent}>
                 <Text style={styles.timeText}>{sentTime}</Text>
+                {newMessages>0 && <View style={styles.dot}>
+                    <Text style={styles.dotText} >{newMessages <= 99 ? newMessages : 99}</Text></View>}
             </View>
         </TouchableOpacity>
     )
@@ -55,4 +56,4 @@ const MessageCard = (props) => {
 const mapStateToProps = (state) => ({
     errors: state.errors.errors,
 });
-export default connect(mapStateToProps, { getAnyUser,updateStatus })(MessageCard);
+export default connect(mapStateToProps, { getAnyUser, updateStatus })(MessageCard);

@@ -30,7 +30,14 @@ const MediaChatCard = (props) => {
                     })
                 }
             </View>
-            <Text style={styles.text}>{data?.message}</Text>
+            {
+                data?.message ?
+                    <>
+                        <Text style={styles.text}>{data?.message}</Text>
+
+                    </>
+                    : null
+            }
             <View style={styles.actionsWrapper}>
                 <Text style={styles.time}>{sentTime}</Text>
             </View>

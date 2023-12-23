@@ -27,6 +27,7 @@ export const SignUp = (data, setLoading, navigation) => async (dispatch) => {
                     .catch((error) => {
                         setLoading(false);
                         const errorMessage = error.message;
+                        console.log(errorMessage);
                         dispatch({ type: GET_ERRORS, payload: errorMessage });
                     });
             })

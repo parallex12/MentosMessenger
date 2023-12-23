@@ -16,21 +16,21 @@ const PeopleCard = (props) => {
         navigation.navigate("ChatScreen", { data })
     }
 
-    console.log(data)
-
+    
     return (
         <View style={styles.container} onPress={onPress}>
             <View style={styles.profileCont}>
                 <View style={styles.profileWrapper}>
                     <Image
-                        source={require("../../../assets/profile.png")}
+                        source={data?.profile ? { uri: data?.profile } : require("../../../assets/profile.png")}
                         resizeMode="cover"
                         style={{ width: '100%', height: '100%' }}
                     />
                 </View>
             </View>
             <View style={styles.textContent}>
-                <Text style={styles.userName}>{data?.name}</Text>
+                <Text style={styles.userName}>{`${data?.name} (${data?.agentId ? "Agent" : "User"})`}</Text>
+                <Text style={styles.slug}>{data?.agentId || data?.email}</Text>
             </View>
             <View style={styles.actionWrapper}>
                 {

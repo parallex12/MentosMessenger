@@ -21,7 +21,7 @@ export const styles = ({ width, height }) =>
       height: '100%',
       position: 'absolute',
       zIndex: 999999999,
-      backgroundColor: 'rgba(0,0,0,0.5)',
+      backgroundColor: 'rgba(0,0,0,0.8)',
       alignItems: 'center',
       justifyContent: 'center'
     }

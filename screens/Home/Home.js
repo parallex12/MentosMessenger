@@ -92,9 +92,10 @@ const Home = (props) => {
                         return senderName.includes(searchText)
                       })
                       .map((item, index) => {
+                        let newMessages = item?.messages?.filter((e) => !e?.seen && e?.reciever == getAuth().currentUser.uid)
                         let isConversationAvailable = item?.messages?.length > 0
                         if (!isConversationAvailable) return
-                        return <MessageCard data={item} key={index} />
+                        return <MessageCard data={item} newMessages={newMessages?.length} key={index} />
                       })
                   }
                 </View>

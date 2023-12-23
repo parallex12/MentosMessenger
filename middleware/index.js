@@ -171,7 +171,6 @@ export const generateRandomString = (length) => {
 export const firebaseImageUpload = (url, name, setImageUploadProgress) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log("url", url)
       let imageId = generateRandomString(30);
       const storage = getStorage();
       const response = await fetch(url);

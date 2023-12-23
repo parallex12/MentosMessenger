@@ -15,6 +15,7 @@ const AdminHome = (props) => {
   let { width, height } = useWindowDimensions();
   let styles = _styles({ width, height });
   const [loading, setLoading] = useState(true)
+  const [searchText, setSearchText] = useState(null)
 
 
   useEffect(() => {
@@ -51,7 +52,7 @@ const AdminHome = (props) => {
     <View style={styles.container}>
       <Header />
       <View style={styles.content}>
-        <Search />
+        <Search onChangeText={(val)=>setSearchText(val?.toLowerCase())} />
         {
           loading ?
             <View style={loaderStyles?.container}>
@@ -66,15 +67,22 @@ const AdminHome = (props) => {
                 props?.get_all_users?.length > 0 &&
                 <View style={styles.chatsWrapper}>
                   {
-                    props?.get_all_users?.map((item, index) => {
-                      if (item?.type == "admin") return
-                      return <PeopleCard
-                        key={index}
-                        data={item}
-                        onApprove={() => onApprove(item?.id)}
-                        onReject={() => onReject(item?.id)}
-                      />
-                    })
+                    props?.get_all_users?.
+                      filter((e) => {
+                        if (searchText?.length == 0 || searchText==null) return e
+                        return e?.email?.toLowerCase()?.includes(searchText) ||
+                          e?.name?.toLowerCase()?.includes(searchText) ||
+                          e?.agentId?.toLowerCase()?.includes(searchText)
+                      })
+                      ?.map((item, index) => {
+                        if (item?.type == "admin") return
+                        return <PeopleCard
+                          key={index}
+                          data={item}
+                          onApprove={() => onApprove(item?.id)}
+                          onReject={() => onReject(item?.id)}
+                        />
+                      })
                   }
                 </View>
               }

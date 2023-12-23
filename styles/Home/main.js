@@ -62,21 +62,21 @@ export const contactsStyles = ({ width, height }) =>
       justifyContent: 'center'
     },
     userWrapper: {
-      minWidth:getPercent(10, height),
-      minHeight:getPercent(8, height),
+      minWidth: getPercent(10, height),
+      minHeight: getPercent(8, height),
       alignItems: 'center',
       justifyContent: 'center',
-      marginRight:5
+      marginRight: 5
     },
     profileWrapper: {
       width: getPercent(7, height),
       height: getPercent(7, height),
       borderWidth: 1,
-      borderColor:"#011A51",
+      borderColor: "#011A51",
       borderRadius: 100,
       overflow: 'hidden',
-      alignItems:'center',
-      justifyContent:'center'
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     name: {
       fontSize: rf(11),
@@ -233,6 +233,22 @@ export const messageCardStyles = ({ width, height }) =>
       fontSize: rf(10),
       color: '#525357',
       fontFamily: 'Regular',
+    },
+    dotText:{
+      fontSize: getPercent(1.3, height),
+      color: '#fff',
+      fontFamily: 'Regular',
+    },
+    dot: {
+      width: getPercent(2.5, height),
+      height: getPercent(2.5, height),
+      backgroundColor: '#011A51',
+      borderRadius: 100,
+      alignSelf: 'flex-end',
+      top: 10,
+      alignItems:'center',
+      justifyContent:'center',
+      padding:2
     },
     approvebtn: {
       width: getPercent(25, width),

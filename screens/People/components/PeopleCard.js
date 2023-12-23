@@ -28,7 +28,7 @@ const PeopleCard = (props) => {
     }, [data])
 
     return (
-        <View style={styles.container} >
+        <TouchableOpacity style={styles.container} onPress={onPress}>
             <View style={styles.profileCont}>
                 <View style={styles.profileWrapper}>
                     <Image
@@ -45,7 +45,7 @@ const PeopleCard = (props) => {
             <TouchableOpacity style={styles.requestBtn} onPress={onPress}>
                 <Ionicons name="chatbubble" size={RFValue(13)} color="#fff" />
             </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
     )
 };
 

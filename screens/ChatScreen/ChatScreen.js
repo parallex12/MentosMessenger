@@ -14,6 +14,9 @@ import MediaSheet from "./components/MediaSheet";
 import { firebaseImageUpload } from "../../middleware";
 import MediaChatCard from "./components/MediaChatCard";
 import { loaderStyles } from "../../styles/Global/main";
+import { updateStatus } from "../../state-management/actions/features";
+import { ImageEditor } from "expo-image-editor";
+
 
 const ChatScreen = (props) => {
   let { } = props;
@@ -33,6 +36,7 @@ const ChatScreen = (props) => {
   const [messages, setMessages] = useState([])
   const [imageUploadProgress, setImageUploadProgress] = useState(null)
   const [images, setImages] = useState(null)
+  const [editorVisible, setEditorVisible] = useState(false);
   const [isRelationUpdated, setIsRelationUpdated] = useState(null)
   const scrollRef = useRef();
 
@@ -80,6 +84,33 @@ const ChatScreen = (props) => {
     }
   }, [chatRelation])
 
+
+
+  useEffect(() => {
+    const seenSync = async () => {
+      return new Promise(async (resolve, reject) => {
+        const newArr = await Promise.all(
+          messages?.map(async (item, index) => {
+            if (item?.reciever == currentUserId && !item?.seen) {
+              item["seen"] = true
+              // arr.push(item)
+              return item
+            }
+            return item
+          })
+        )
+        resolve(newArr)
+      })
+    }
+    if (messages?.filter((e) => !e?.seen && e?.reciever == currentUserId)?.length > 0) {
+      seenSync()
+        .then((res) => {
+          props?.updateStatus({ messages: res }, chatRelation?.id)
+        })
+    }
+
+  }, [messages])
+
   let memiozedMessages = useMemo(() => {
     return messages
   }, [messages])
@@ -93,6 +124,7 @@ const ChatScreen = (props) => {
       message: messageText,
       images: images,
       sent: false,
+      seen: false,
       created_at: new Date().toLocaleTimeString()
     }
     let prevM = messages
@@ -124,7 +156,7 @@ const ChatScreen = (props) => {
           console.log(e);
         });
     });
-    
+
     if (images?.length > 0) {
       Promise.all(promises)
         .then(function (results) {
@@ -171,18 +203,40 @@ const ChatScreen = (props) => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: true,
-      aspect: [4, 3],
-      quality: 0,
+      allowsEditing: false,
+      aspect: [4, 4],
+      quality: 1,
     });
     if (!result.canceled) {
-      setImages(result.assets);
+      launchEditor(result?.assets)
     }
   };
 
+  const launchEditor = (result) => {
+    // Then set the image uri
+    setImages(result);
+    // And set the image editor to be visible
+    setEditorVisible(true);
+  };
+  console.log(images)
   return (
     <View style={styles.container}>
       <Header data={otherUserData} />
+      <ImageEditor
+        visible={editorVisible}
+        onCloseEditor={() => setEditorVisible(false)}
+        imageUri={images?.length > 0 && images[0]?.uri}
+        fixedCropAspectRatio={16 / 9}
+        // lockAspectRatio={aspectLock}
+        minimumCropDimensions={{
+          width: 100,
+          height: 100,
+        }}
+        onEditingComplete={(result) => {
+          setImages([result]);
+        }}
+        mode="full"
+      />
       <ScrollView
         ref={scrollRef}
         onContentSizeChange={() =>
@@ -233,7 +287,7 @@ const ChatScreen = (props) => {
         />
       </TouchableOpacity>
       }
-      <KeyboardAvoidingView behavior="position">
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "position" : null}>
         {images?.length > 0 && <MediaSheet imageUploadProgress={imageUploadProgress} image={images} setImage={setImages} />}
         <TypingComponent
           messageText={messageText}
@@ -252,4 +306,4 @@ const mapStateToProps = (state) => ({
   errors: state.errors.errors,
   get_user_details: state.main.get_user_details,
 });
-export default connect(mapStateToProps, { getRelation, createRelation, sendMessage })(ChatScreen);
+export default connect(mapStateToProps, { getRelation, createRelation, updateStatus, sendMessage })(ChatScreen);

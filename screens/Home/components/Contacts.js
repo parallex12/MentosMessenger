@@ -14,7 +14,7 @@ const Contacts = (props) => {
             <ScrollView horizontal>
                 {
                     props?.get_all_contacts?.map((item, index) => {
-                        console.log(item)
+                       
                         if (!item?.online) return
                         return (
                             <TouchableOpacity style={styles.userWrapper} key={index} onPress={() => navigation.navigate("ChatScreen", { data:item })}>
