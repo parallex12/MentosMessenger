@@ -235,7 +235,7 @@ const ChatScreen = (props) => {
         onEditingComplete={(result) => {
           setImages([result]);
         }}
-        mode="full"
+        mode="crop-only"
       />
       <ScrollView
         ref={scrollRef}

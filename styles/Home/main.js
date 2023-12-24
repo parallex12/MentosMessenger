@@ -143,7 +143,7 @@ export const headerStyles = ({ width, height }) =>
     editBtn: {
       width: getPercent(4, height),
       height: getPercent(4, height),
-      backgroundColor: '#F5F5F5',
+      backgroundColor: '#011A51',
       borderRadius: 100,
       alignItems: 'center',
       justifyContent: 'center',

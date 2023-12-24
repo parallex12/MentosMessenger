@@ -19,11 +19,11 @@
     "expo-image-editor": "^1.7.1",
     "expo-image-picker": "~14.3.2",
     "expo-status-bar": "~1.6.0",
-    "expo-updates": "~0.18.13",
+    "expo-updates": "~0.18.18",
     "firebase": "^10.7.0",
     "lottie-react-native": "5.1.6",
     "react": "18.2.0",
-    "react-native": "0.72.4",
+    "react-native": "0.72.6",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-gifted-chat": "^2.4.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
@@ -36,7 +36,8 @@
     "react-redux": "^8.1.2",
     "recoil": "^0.7.7",
     "redux": "^4.2.1",
-    "redux-thunk": "^2.4.2"
+    "redux-thunk": "^2.4.2",
+    "expo-image-manipulator": "~11.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

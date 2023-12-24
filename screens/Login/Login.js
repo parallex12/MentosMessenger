@@ -36,7 +36,7 @@ const Login = (props) => {
 
         <View style={styles.logoWrapper}>
           <Image
-            source={require("../../assets/logo.png")}
+            source={require("../../assets/mantosLogo.png")}
             resizeMode="contain"
             style={{ width: '100%', height: '100%' }}
           />

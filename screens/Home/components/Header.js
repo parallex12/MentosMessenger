@@ -25,7 +25,7 @@ const Header = (props) => {
             <View style={styles.actionWrapper}>
                 {plusIcon &&
                     <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate("People")}>
-                        <Entypo name="plus" size={RFValue(15)} color="#979797" />
+                        <Entypo name="plus" size={RFValue(15)} color="#fff" />
                     </TouchableOpacity>
                 }
             </View>

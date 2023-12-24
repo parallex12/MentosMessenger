@@ -14,8 +14,7 @@ export const styles = ({ width, height }) =>
       paddingHorizontal: getPercent(5, width)
     },
     logoWrapper: {
-      width: getPercent(80, width),
-      height: getPercent(20, height)
+      height: getPercent(20, height),
     },
     content: {
       flex: 1,
