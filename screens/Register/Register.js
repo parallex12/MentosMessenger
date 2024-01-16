@@ -6,6 +6,7 @@ import StandardButton from "../../globalComponents/StandardButton";
 import { useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SignUp } from "../../state-management/actions/auth";
+import store from "../../state-management/store";
 
 const Register = (props) => {
   let { } = props;
@@ -20,15 +21,26 @@ const Register = (props) => {
       password: null,
       phone: null,
       name: null,
-      type:"user"
+      type: "user"
     }
   )
+
+
 
   const onSubmit = () => {
     if (!Object.values(form)?.includes(null)) {
       if (form?.password == confirmPassword) {
         setLoading(true)
-        props?.SignUp(form, setLoading,props?.navigation)
+        props?.SignUp(form)
+          .then((res) => {
+            setLoading(false)
+            console.log("Welcome")
+            props?.navigation.goBack()
+          })
+          .catch((e) => {
+            setLoading(false)
+            console.log("this is",e)
+          })
       } else {
         alert("Passwor doesn't match.")
       }
@@ -36,8 +48,6 @@ const Register = (props) => {
       alert("Fill all details.")
     }
   }
-
-
 
   return (
     <View style={styles.container}>
@@ -53,7 +63,7 @@ const Register = (props) => {
         <View style={styles.content}>
           <Text style={styles.titleText}>Register Now</Text>
           <TextField placeholder="Name" onChangeText={(val) => setForm((prev) => { return { ...prev, name: val } })} />
-          <TextField placeholder="Email" onChangeText={(val) => setForm((prev) => { return { ...prev, email: val } })} />
+          <TextField placeholder="Email" onChangeText={(val) => setForm((prev) => { return { ...prev, email: val?.toLowerCase() } })} />
           <TextField placeholder="Phone"
             onChangeText={(val) => setForm((prev) => { return { ...prev, phone: val } })}
             keyboardType="number-pad"

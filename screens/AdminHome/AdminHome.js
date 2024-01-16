@@ -1,4 +1,4 @@
-import { ActivityIndicator, Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
 import { connect } from "react-redux";
 import { styles as _styles } from "../../styles/AdminHome/main";
 import { SignOut } from "../../state-management/actions/auth";
@@ -52,43 +52,45 @@ const AdminHome = (props) => {
     <View style={styles.container}>
       <Header />
       <View style={styles.content}>
-        <Search onChangeText={(val)=>setSearchText(val?.toLowerCase())} />
-        {
-          loading ?
-            <View style={loaderStyles?.container}>
-              <ActivityIndicator size="large" color="#222" />
-            </View>
-            :
-            <>
-              {props?.get_all_users == null && <View style={styles.emptyCont}>
-                <Text style={styles.emptyTitle}>No Agents Yet</Text>
-              </View>}
-              {
-                props?.get_all_users?.length > 0 &&
-                <View style={styles.chatsWrapper}>
-                  {
-                    props?.get_all_users?.
-                      filter((e) => {
-                        if (searchText?.length == 0 || searchText==null) return e
-                        return e?.email?.toLowerCase()?.includes(searchText) ||
-                          e?.name?.toLowerCase()?.includes(searchText) ||
-                          e?.agentId?.toLowerCase()?.includes(searchText)
-                      })
-                      ?.map((item, index) => {
-                        if (item?.type == "admin") return
-                        return <PeopleCard
-                          key={index}
-                          data={item}
-                          onApprove={() => onApprove(item?.id)}
-                          onReject={() => onReject(item?.id)}
-                        />
-                      })
-                  }
-                </View>
-              }
-            </>
-        }
+        <ScrollView>
+          <Search onChangeText={(val) => setSearchText(val?.toLowerCase())} />
+          {
+            loading ?
+              <View style={loaderStyles?.container}>
+                <ActivityIndicator size="large" color="#222" />
+              </View>
+              :
+              <>
+                {props?.get_all_users == null && <View style={styles.emptyCont}>
+                  <Text style={styles.emptyTitle}>No Agents Yet</Text>
+                </View>}
+                {
+                  props?.get_all_users?.length > 0 &&
+                  <View style={styles.chatsWrapper}>
+                    {
+                      props?.get_all_users?.
+                        filter((e) => {
+                          if (searchText?.length == 0 || searchText == null) return e
+                          return e?.email?.toLowerCase()?.includes(searchText) ||
+                            e?.name?.toLowerCase()?.includes(searchText) ||
+                            e?.agentId?.toLowerCase()?.includes(searchText)
+                        })
+                        ?.map((item, index) => {
+                          if (item?.type == "admin") return
+                          return <PeopleCard
+                            key={index}
+                            data={item}
+                            onApprove={() => onApprove(item?.id)}
+                            onReject={() => onReject(item?.id)}
+                          />
+                        })
+                    }
+                  </View>
+                }
+              </>
+          }
 
+        </ScrollView>
       </View>
       {/* <BottomMenu activeTab={0}/> */}
     </View>

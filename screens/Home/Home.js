@@ -28,8 +28,8 @@ const Home = (props) => {
     props?.getMyChats()
     props?.getUpdatesOnContacts()
     props?.getCurrentUser(setLoading)
-      .then((res) => console.log(res))
-      .catch((e) => console.log(e))
+      .then((res) => console.log("Home",res))
+      .catch((e) => console.log("Home",e))
 
     props?.updateUser({ online: true }, getAuth().currentUser.uid)
   }, [])

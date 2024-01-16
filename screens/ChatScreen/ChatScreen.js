@@ -13,7 +13,7 @@ import * as ImagePicker from 'expo-image-picker';
 import MediaSheet from "./components/MediaSheet";
 import { firebaseImageUpload } from "../../middleware";
 import MediaChatCard from "./components/MediaChatCard";
-import { loaderStyles } from "../../styles/Global/main";
+import { loaderStyles, loaderStylesOpacity } from "../../styles/Global/main";
 import { updateStatus } from "../../state-management/actions/features";
 import { ImageEditor } from "expo-image-editor";
 
@@ -218,10 +218,17 @@ const ChatScreen = (props) => {
     // And set the image editor to be visible
     setEditorVisible(true);
   };
-  console.log(images)
+
+
   return (
     <View style={styles.container}>
       <Header data={otherUserData} />
+      {
+        loading &&
+        <View style={loaderStylesOpacity()?.container}>
+          <ActivityIndicator size="large" color="#222" />
+        </View>
+      }
       <ImageEditor
         visible={editorVisible}
         onCloseEditor={() => setEditorVisible(false)}
@@ -237,45 +244,44 @@ const ChatScreen = (props) => {
         }}
         mode="crop-only"
       />
+
+
       <ScrollView
         ref={scrollRef}
         onContentSizeChange={() =>
           scrollRef.current.scrollToEnd({ animated: true })
         }
       >
-        {
-          loading ?
-            <ActivityIndicator size="large" color="#222" />
-            : <View style={styles.content}>
-              {
-                memiozedMessages?.map((item, index) => {
-                  if (!item?.sent) return <Text key={index}>sending..</Text>
-                  if (item?.images?.length > 0) {
-                    let isSender = item?.sender == currentUserId
-                    return <MediaChatCard
-                      isSender={isSender}
-                      setImageViewer={setImageViewer}
-                      images={isSender ? item?.images : item?.liveImages}
-                      key={index}
-                      data={item}
-                    />
-                  }
-                  if (item?.sender == currentUserId) {
-                    return <SenderCard setImageViewer={setImageViewer} image={null} key={index} data={item} />
-                  } else {
-                    return <RecieverCard setImageViewer={setImageViewer} key={index} image={null} data={item} />
-                  }
-                })
+        <View style={styles.content}>
+          {
+            memiozedMessages?.map((item, index) => {
+              if (!item?.sent) return <Text key={index}>sending..</Text>
+              if (item?.images?.length > 0) {
+                let isSender = item?.sender == currentUserId
+                return <MediaChatCard
+                  isSender={isSender}
+                  setImageViewer={setImageViewer}
+                  images={isSender ? item?.images : item?.liveImages}
+                  key={index}
+                  data={item}
+                />
               }
-            </View>
-        }
+
+              if (item?.sender == currentUserId) {
+                return <SenderCard setImageViewer={setImageViewer} image={null} key={index} data={item} />
+              } else {
+                return <RecieverCard setImageViewer={setImageViewer} key={index} image={null} data={item} />
+              }
+            })
+          }
+        </View>
       </ScrollView>
       {imageViewer && <TouchableOpacity
         activeOpacity={1}
         style={styles.imageViewer}
         onPress={() => setImageViewer(null)}
       >
-        {imageViewerLoading && <View style={loaderStyles.container}>
+        {imageViewerLoading && <View style={loaderStyles().container}>
           <ActivityIndicator size="large" color="#fff" />
         </View>}
         <Image

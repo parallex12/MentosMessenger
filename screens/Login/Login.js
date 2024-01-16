@@ -6,6 +6,7 @@ import StandardButton from "../../globalComponents/StandardButton";
 import { useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { LoginWithEmailPass } from "../../state-management/actions/auth";
+import { getAuth } from "firebase/auth";
 
 const Login = (props) => {
   let { } = props;
@@ -43,7 +44,7 @@ const Login = (props) => {
         </View>
         <View style={styles.content}>
           <Text style={styles.titleText}>Login To Your Account.</Text>
-          <TextField placeholder="Email" onChangeText={(val) => setForm((prev) => { return { ...prev, email: val } })} />
+          <TextField placeholder="Email" onChangeText={(val) => setForm((prev) => { return { ...prev, email: val?.toLowerCase() } })} />
           <TextField
             placeholder="Password"
             onChangeText={(val) => setForm((prev) => { return { ...prev, password: val } })}
@@ -62,6 +63,7 @@ const Login = (props) => {
     </View>
   );
 };
+
 
 const mapStateToProps = (state) => ({
   errors: state.errors.errors,

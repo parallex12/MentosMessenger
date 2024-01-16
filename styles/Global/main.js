@@ -1,6 +1,7 @@
 import { Platform, StatusBar, StyleSheet } from "react-native";
 import { RFValue as rf } from "react-native-responsive-fontsize";
 import { getPercent } from "../../middleware";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 //standardButton Styles starts here
 export const standardButtonStyles = ({ width, height }) =>
@@ -22,18 +23,32 @@ export const standardButtonStyles = ({ width, height }) =>
   });
 
 //loader Styles starts here
-export const loaderStyles = ({ width, height }) =>
+export const loaderStyles = () =>
   StyleSheet.create({
     container: {
-      width: width,
-      height: height,
+      width: wp('100%'),
+      height: hp('100%'),
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: "#fff",
       position: "absolute",
       left: 0,
       zIndex: 9999999,
-      top: getPercent(20, height),
+    },
+  });
+
+//loader OpacityStyles starts here
+export const loaderStylesOpacity = () =>
+  StyleSheet.create({
+    container: {
+      width: wp('100%'),
+      height: hp('100%'),
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "rgba(255,255,255,0.4)",
+      position: "absolute",
+      left: 0,
+      zIndex: 9999999,
     },
   });
 
@@ -56,11 +71,14 @@ export const textFieldStyles = ({ width, height }) =>
       marginVertical: getPercent(1, height)
     },
     inputCont: {
-      width: '80%',
+      width: '90%',
       height: '100%',
       fontSize: rf(12),
       color: '#222',
       fontFamily: 'Medium'
+    },
+    eyeIcon:{
+      padding:5
     }
   });
 
@@ -74,7 +92,7 @@ export const bottomMenuStyles = ({ width, height }) =>
       position: 'absolute',
       bottom: 0,
       paddingVertical: getPercent(2, height),
-      flexDirection:'row',
+      flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       shadowColor: "#000",
@@ -85,23 +103,23 @@ export const bottomMenuStyles = ({ width, height }) =>
       shadowOpacity: 0.20,
       shadowRadius: 3.41,
       elevation: 5,
-      
+
     },
     actionBtn: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
     },
-    actionBtnText:{
+    actionBtnText: {
       fontSize: rf(12),
       color: '#133581',
       fontFamily: 'Medium',
-      marginTop:2
+      marginTop: 2
     },
-    actionBtnText2:{
+    actionBtnText2: {
       fontSize: rf(12),
       color: '#A4AAB2',
       fontFamily: 'Medium',
-      marginTop:2
+      marginTop: 2
     }
   });

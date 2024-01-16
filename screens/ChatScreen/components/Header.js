@@ -29,6 +29,9 @@ const Header = (props) => {
                     <Text style={styles.slug}>Mentos Messenger</Text>
                 </View>
             </View>
+            <TouchableOpacity style={styles.payBtn} onPress={() => alert("Coming Soon!")}>
+                <Text style={styles.payBtnText}>Pay</Text>
+            </TouchableOpacity>
         </View>
     )
 };

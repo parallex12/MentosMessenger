@@ -12,41 +12,43 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export const SignUp = (data, setLoading, navigation) => async (dispatch) => {
-    try {
-        const auth = getAuth();
-        const db = getFirestore();
-        createUserWithEmailAndPassword(auth, data?.email, data?.password)
-            .then(async (userCredential) => {
-                const user = userCredential.user;
-                await setDoc(doc(db, "users", user?.uid), data)
-                    .then((res) => {
-                        console.log("Welcome !!");
-                        setLoading(false)
-                        navigation.goBack()
-                    })
-                    .catch((error) => {
-                        setLoading(false);
-                        const errorMessage = error.message;
-                        console.log(errorMessage);
-                        dispatch({ type: GET_ERRORS, payload: errorMessage });
-                    });
-            })
-            .catch((error) => {
-                setLoading(false);
-                const errorMessage = error.message;
-                console.log(errorMessage);
-                dispatch({ type: GET_ERRORS, payload: errorMessage });
-                let err = errorMessage.indexOf("/");
-                let fErr = errorMessage.slice(err + 1, errorMessage.length - 2);
-                if (fErr == "email-already-in-use") {
-                    alert("Email already in use");
-                }
-            });
-    } catch (e) {
-        setLoading(false);
-        dispatch({ type: GET_ERRORS, payload: e.message });
-        console.log(e.message);
-    }
+    return new Promise((resolve, reject) => {
+        try {
+            const auth = getAuth();
+            const db = getFirestore();
+            createUserWithEmailAndPassword(auth, data?.email, data?.password)
+                .then(async (userCredential) => {
+                    const user = userCredential.user;
+                    await setDoc(doc(db, "users", user?.uid), data)
+                        .then((res) => {
+                            _sendEmailVerification(user)
+                            resolve(200)
+                        })
+                        .catch((error) => {
+                            reject("Error in firestore")
+                            const errorMessage = error.message;
+                            dispatch({ type: GET_ERRORS, payload: errorMessage });
+                        });
+                })
+                .then((res) => {
+                    console.log("Second then", res)
+                    signOut(auth)
+                })
+                .catch((error) => {
+                    const errorMessage = error.message;
+                    dispatch({ type: GET_ERRORS, payload: errorMessage });
+                    let err = errorMessage.indexOf("/");
+                    let fErr = errorMessage.slice(err + 1, errorMessage.length - 2);
+                    if (fErr == "email-already-in-use") {
+                        alert("Email already in use");
+                    }
+                    reject(errorMessage)
+                });
+        } catch (e) {
+            reject(e.message)
+            dispatch({ type: GET_ERRORS, payload: e.message });
+        }
+    })
 };
 
 export const LoginWithEmailPass = (data, setLoading) => async (dispatch) => {
@@ -55,6 +57,9 @@ export const LoginWithEmailPass = (data, setLoading) => async (dispatch) => {
         signInWithEmailAndPassword(auth, data?.email, data?.password)
             .then((userCredential) => {
                 const user = userCredential.user;
+                if (!user?.emailVerified && user?.email!="superadmin11@mentos.com") {
+                    _sendEmailVerification(user)
+                }
                 setLoading(false)
             })
             .catch((error) => {
@@ -125,6 +130,6 @@ export const _sendEmailVerification = async (user) => {
         })
         .catch((error) => {
             const errorMessage = error.message;
-            console.log(errorMessage)
+            console.log("Verification", errorMessage)
         });
 };

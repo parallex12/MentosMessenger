@@ -62,7 +62,7 @@ const ForgotPassword = (props) => {
         </View>
         <View style={styles.content}>
           <Text style={styles.titleText}>Recover Password.</Text>
-          <TextField placeholder="Email" onChangeText={(val) => setEmail(val)} />
+          <TextField placeholder="Email" onChangeText={(val) => setEmail(val?.toLowerCase())} />
 
           <StandardButton title={loading ? <ActivityIndicator size="small" color="#fff" /> : "Reset"} onPress={onSubmit} />
           <StandardButton title="Login" onPress={() => props?.navigation.navigate("Login")} />

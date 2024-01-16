@@ -155,13 +155,13 @@ export const mediaChatCardStyles = ({ width, height }) =>
       alignSelf: 'flex-end',
       borderRadius: 6,
       padding: 5,
-      paddingHorizontal:0
+      paddingHorizontal: 0
     },
     actionsWrapper: {
       alignSelf: 'flex-end',
       flexDirection: 'row',
       alignItems: 'center',
-      paddingHorizontal:10
+      paddingHorizontal: 10
     },
     time: {
       fontSize: rf(8),
@@ -181,7 +181,7 @@ export const mediaChatCardStyles = ({ width, height }) =>
     },
     imageWrapper: {
       borderColor: '#0584FE',
-      borderWidth:5,
+      borderWidth: 5,
       flex: 1,
       minWidth: '25%',
       height: getPercent(14, height),
@@ -214,7 +214,7 @@ export const mediaChatCardRecieverStyles = ({ width, height }) =>
       alignSelf: 'flex-start',
       borderRadius: 6,
       padding: 5,
-      paddingHorizontal:0
+      paddingHorizontal: 0
     },
     actionsWrapper: {
       alignSelf: 'flex-end',
@@ -225,7 +225,7 @@ export const mediaChatCardRecieverStyles = ({ width, height }) =>
       fontSize: rf(8),
       fontFamily: 'Regular',
       color: '#525357',
-      paddingHorizontal:10
+      paddingHorizontal: 10
     },
     text: {
       fontSize: rf(13),
@@ -240,7 +240,7 @@ export const mediaChatCardRecieverStyles = ({ width, height }) =>
     },
     imageWrapper: {
       borderColor: '#C2C6CC',
-      borderWidth:5,
+      borderWidth: 5,
       flex: 1,
       minWidth: '25%',
       height: getPercent(14, height),
@@ -342,7 +342,7 @@ export const headerStyles = ({ width, height }) =>
       height: getPercent(5, height),
       borderRadius: 100,
       borderWidth: 1,
-      overflow:'hidden'
+      overflow: 'hidden'
     },
     profileImg: {
       width: '100%',
@@ -361,6 +361,19 @@ export const headerStyles = ({ width, height }) =>
       fontFamily: 'Regular',
       color: '#6F7175',
       marginTop: 2
+    },
+    payBtn: {
+      width: getPercent(20, width),
+      height: getPercent(4, height),
+      backgroundColor: "#011A51",
+      borderRadius: 100,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    payBtnText: {
+      fontSize: rf(13),
+      fontFamily: "Medium",
+      color: "#fff"
     }
   });
 //typingComponentStyles starts here

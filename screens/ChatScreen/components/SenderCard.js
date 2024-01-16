@@ -13,6 +13,8 @@ const SenderCard = (props) => {
     let navigation = useNavigation()
     let sentTime = getSentTimeFormat(data?.created_at)
 
+    let tickColor = data?.sent && data?.seen ? "#0584FE" : data?.sent && !data?.seend ? "grey" : "transparent"
+
     return (
         <View style={styles.container}>
             <View style={styles.boxWrapper}>
@@ -31,6 +33,7 @@ const SenderCard = (props) => {
             </View>
             <View style={styles.actionsWrapper}>
                 <Text style={styles.time}>{sentTime}</Text>
+                <Ionicons name="checkmark-done" size={RFValue(15)} color={tickColor} />
             </View>
         </View>
     )

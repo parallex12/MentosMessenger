@@ -178,7 +178,7 @@ export const searchStyles = ({ width, height }) =>
 export const messageCardStyles = ({ width, height }) =>
   StyleSheet.create({
     container: {
-      height: getPercent(8, height),
+      minHeight: getPercent(10, height),
       borderRadius: 10,
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -213,12 +213,18 @@ export const messageCardStyles = ({ width, height }) =>
     },
     textContent: {
       flex: 1,
-      paddingHorizontal: 10
+      paddingHorizontal: 10,
+      paddingVertical: getPercent(1, height)
     },
     userName: {
       fontSize: rf(14),
       color: '#19191A',
       fontFamily: 'Regular',
+    },
+    slug: {
+      fontSize: rf(13),
+      color: '#19191A',
+      fontFamily: 'Medium',
     },
     lastMessageText: {
       fontSize: rf(10),
@@ -234,7 +240,7 @@ export const messageCardStyles = ({ width, height }) =>
       color: '#525357',
       fontFamily: 'Regular',
     },
-    dotText:{
+    dotText: {
       fontSize: getPercent(1.3, height),
       color: '#fff',
       fontFamily: 'Regular',
@@ -246,9 +252,9 @@ export const messageCardStyles = ({ width, height }) =>
       borderRadius: 100,
       alignSelf: 'flex-end',
       top: 10,
-      alignItems:'center',
-      justifyContent:'center',
-      padding:2
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 2
     },
     approvebtn: {
       width: getPercent(25, width),

@@ -24,10 +24,12 @@ import { firebaseConfig } from "./firebaseConfig";
 import { styles } from "./styles/Home/main";
 import { _sendEmailVerification } from "./state-management/actions/auth";
 import { AdminNavigator } from "./routes/AdminNavigator";
+import { loaderStyles } from "./styles/Global/main";
 
 export default function App() {
   const [fontsLoaded] = useFonts(FontsConfig);
   const [userStatus, setUserStatus] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     try {
@@ -41,30 +43,40 @@ export default function App() {
           const storage = getStorage(a);
           onAuthStateChanged(auth, (user) => {
             if (user) {
+              setLoading(true)
               if (user?.email == "superadmin11@mentos.com") {
                 setUserStatus("admin");
+                setLoading(false)
                 return
               }
               if (user?.emailVerified) {
                 setUserStatus(true);
+                setLoading(false)
               } else {
-                _sendEmailVerification(user)
-                signOut(auth)
+                setLoading(false)
+                setUserStatus(null)
               }
             } else {
-              console.log(user);
-              setUserStatus(false);
+              console.log(auth);
+              setUserStatus(null);
+              setLoading(false)
             }
           });
         }
       })();
     } catch (e) {
+      setLoading(false)
       console.log(e.message);
     }
   }, [])
 
   if (!fontsLoaded) {
-    return <View style={styles.loaderStyles}>
+    return <View style={loaderStyles()?.container}>
+      <ActivityIndicator size="large" color="#222" />
+    </View>;
+  }
+  if (loading) {
+    return <View style={loaderStyles()?.container}>
       <ActivityIndicator size="large" color="#222" />
     </View>;
   }
