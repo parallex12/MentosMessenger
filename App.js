@@ -25,6 +25,7 @@ import { styles } from "./styles/Home/main";
 import { _sendEmailVerification } from "./state-management/actions/auth";
 import { AdminNavigator } from "./routes/AdminNavigator";
 import { loaderStyles } from "./styles/Global/main";
+import { getFirestore } from "firebase/firestore";
 
 export default function App() {
   const [fontsLoaded] = useFonts(FontsConfig);
@@ -40,6 +41,7 @@ export default function App() {
           const auth = initializeAuth(a, {
             persistence: getReactNativePersistence(AsyncStorage),
           });
+          const db = getFirestore(a);
           const storage = getStorage(a);
           onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -70,17 +72,11 @@ export default function App() {
     }
   }, [])
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || loading) {
     return <View style={loaderStyles()?.container}>
       <ActivityIndicator size="large" color="#222" />
     </View>;
   }
-  if (loading) {
-    return <View style={loaderStyles()?.container}>
-      <ActivityIndicator size="large" color="#222" />
-    </View>;
-  }
-
 
   return (
     <Provider store={store}>

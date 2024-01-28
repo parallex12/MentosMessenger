@@ -4,6 +4,11 @@
     "slug": "mentosmessenger",
     "version": "1.0.0",
     "orientation": "portrait",
+    "jsEngine": "hermes",
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -17,13 +22,15 @@
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
-      ]
+      ],
+      "expo-font"
     ],
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.adlerware.mentosmessenger"
     },
     "android": {
       "adaptiveIcon": {
@@ -42,11 +49,12 @@
       "policy": "sdkVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/355ecb30-90d8-4971-89ae-ca869b3cfd3f"
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/812b2bdc-16de-4c53-83d6-b320f67e32e5"
     },
     "extra": {
       "eas": {
-        "projectId": "355ecb30-90d8-4971-89ae-ca869b3cfd3f"
+        "projectId": "812b2bdc-16de-4c53-83d6-b320f67e32e5"
       }
     },
     "owner": "adlerware"
