@@ -114,7 +114,7 @@ export const settingsOptions = [
       try {
         const result = await Share.share({
           message:
-            'Mentos Messenger connect to real world.',
+            'Mantos Messenger connect to real world.',
         });
         if (result.action === Share.sharedAction) {
           if (result.activityType) {

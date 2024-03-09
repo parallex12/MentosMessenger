@@ -40,7 +40,7 @@ const PeopleCard = (props) => {
             </View>
             <View style={styles.textContent}>
                 <Text style={styles.userName}>{updatedUserData?.name}</Text>
-                <Text style={styles.slug}>Mentos Messenger</Text>
+                <Text style={styles.slug}>Mantos Messenger</Text>
             </View>
             <TouchableOpacity style={styles.requestBtn} onPress={onPress}>
                 <Ionicons name="chatbubble" size={RFValue(13)} color="#fff" />

@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Mentos Messenger",
-    "slug": "mentosmessenger",
-    "version": "1.0.0",
+    "name": "Mantos Messenger",
+    "slug": "mantosmessenger",
+    "version": "1.1.0",
     "orientation": "portrait",
     "jsEngine": "hermes",
     "platforms": [

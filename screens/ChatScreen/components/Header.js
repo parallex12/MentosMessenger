@@ -26,7 +26,7 @@ const Header = (props) => {
                 </View>
                 <View style={styles.textWrapper}>
                     <Text style={styles.username}>{data?.name}</Text>
-                    <Text style={styles.slug}>Mentos Messenger</Text>
+                    <Text style={styles.slug}>Mantos Messenger</Text>
                 </View>
             </View>
             <TouchableOpacity style={styles.payBtn} onPress={() => alert("Coming Soon!")}>
