@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "Mantos Messenger",
-    "slug": "mantosmessenger",
-    "version": "1.1.0",
+    "slug": "mentosmessenger",
+    "version": "1.2.0",
     "orientation": "portrait",
     "jsEngine": "hermes",
     "platforms": [
@@ -29,10 +29,12 @@
       "**/*"
     ],
     "ios": {
+      "buildNumber": "1.2.0",
       "supportsTablet": true,
       "bundleIdentifier": "com.adlerware.mentosmessenger"
     },
     "android": {
+      "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
