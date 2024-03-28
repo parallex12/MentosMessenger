@@ -14,3 +14,8 @@ const mapStateToProps = (state) => ({
   errors: state.errors.errors,
 });
 export default connect(mapStateToProps, {})(ScreenName);
+"ios": {
+  "appleId": "nazreenbrohi787@gmail.com",
+  "ascAppId": "6444082213",
+  "appleTeamId": "VJS7TJ6W33"
+}

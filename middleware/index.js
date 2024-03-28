@@ -1,8 +1,6 @@
-import { Share, useWindowDimensions } from "react-native";
-import { Entypo, MaterialIcons, AntDesign } from '@expo/vector-icons';
+import { Alert, Share, useWindowDimensions } from "react-native";
+import { Entypo, MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
-import { SignOut } from "../state-management/actions/auth";
-
 import {
   getDownloadURL,
   getStorage,
@@ -10,6 +8,7 @@ import {
   uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
 
 export const FontsConfig = {
   Bold: require("../assets/fonts/SF-Pro-Text-Bold.ttf"),
@@ -92,19 +91,19 @@ export const settingsOptions = [
     title: "Change Bio",
     slug: "Tell us about yourself.",
     icon: <Entypo name="users" size={RFValue(15)} color="#fff" />,
-    onPress: (props) => props?.navigation.navigate("ChangeBio")
+    onPress: (props) => props?.navigation.navigate("ChangeBio"),
   },
   {
     title: "Change Password",
     slug: "Secure your account.",
     icon: <Entypo name="lock" size={RFValue(15)} color="#fff" />,
-    onPress: (props) => props?.navigation.navigate("ChangePassword")
+    onPress: (props) => props?.navigation.navigate("ChangePassword"),
   },
   {
     title: "Email Address",
     slug: null,
     icon: <Entypo name="email" size={RFValue(15)} color="#fff" />,
-    onPress: () => null
+    onPress: () => null,
   },
   {
     title: "Invite Friends",
@@ -113,8 +112,7 @@ export const settingsOptions = [
     onPress: async () => {
       try {
         const result = await Share.share({
-          message:
-            'Mantos Messenger connect to real world.',
+          message: "Mantos Messenger connect to real world.",
         });
         if (result.action === Share.sharedAction) {
           if (result.activityType) {
@@ -128,31 +126,51 @@ export const settingsOptions = [
       } catch (error) {
         Alert.alert(error.message);
       }
-    }
+    },
   },
 
   {
     title: "Contact Support",
     slug: "24/7 Available for you.",
-    icon: <MaterialIcons name="support-agent" size={RFValue(20)} color="#fff" />,
-    onPress: () => alert("Not available at the moment.")
+    icon: (
+      <MaterialIcons name="support-agent" size={RFValue(20)} color="#fff" />
+    ),
+    onPress: () => alert("Not available at the moment."),
+  },
+  {
+    title: "Delete Account",
+    slug: "Caution: This action will delete your account.",
+    icon: <AntDesign name="warning" size={RFValue(15)} color="#fff" />,
+    onPress: (props) =>
+      Alert.alert(
+        "Warning!",
+        "Are you sure you want to delete your account? This action cannot be undone.",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          { text: "OK", onPress: () => props?.DeleteAccount() },
+        ]
+      ),
   },
   {
     title: "Logout",
     slug: "See you later.",
     icon: <AntDesign name="logout" size={RFValue(15)} color="#fff" />,
-    onPress: (props) => props?.SignOut()
+    onPress: (props) => props?.SignOut(),
   },
-]
+];
 
 export const getSentTimeFormat = (time) => {
-  let splittedTime = time.split(":")
-  let _hours = splittedTime[0]
-  let _minutes = splittedTime[1]
-  let _zone = splittedTime[2].slice(3)
+  let splittedTime = time.split(":");
+  let _hours = splittedTime[0];
+  let _minutes = splittedTime[1];
+  let _zone = splittedTime[2].slice(3);
 
-  return _hours + ":" + _minutes + " " + _zone
-}
+  return _hours + ":" + _minutes + " " + _zone;
+};
 
 // declare all characters
 const characters =
@@ -166,7 +184,6 @@ export const generateRandomString = (length) => {
   }
   return result;
 };
-
 
 export const firebaseImageUpload = (url, name, setImageUploadProgress) => {
   return new Promise(async (resolve, reject) => {
@@ -184,7 +201,7 @@ export const firebaseImageUpload = (url, name, setImageUploadProgress) => {
           // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setImageUploadProgress(parseInt(progress))
+          setImageUploadProgress(parseInt(progress));
           switch (snapshot.state) {
             case "paused":
               console.log("Upload is paused");
@@ -223,4 +240,13 @@ export const firebaseImageUpload = (url, name, setImageUploadProgress) => {
       reject(e);
     }
   });
+};
+
+export const checkIfUserExists = async (id) => {
+  const db = getFirestore();
+  const docRef = doc(db, "users", id);
+  const docSnap = await getDoc(docRef);
+  if (!docSnap.exists()) return false;
+  if (docSnap.data()?.accountStatus == "deleted") return false;
+  return true;
 };

@@ -18,6 +18,7 @@ const MessageCard = (props) => {
     let userDetails = me?.email == data?.reciever_details?.email ? data?.sender_details : data?.reciever_details
     let sentTime = getSentTimeFormat(data?.created_at)
     const [updatedUserData, setUpdatedUserData] = useState(null)
+    
     const onPress = () => {
         navigation.navigate("ChatScreen", { data: userDetails })
     }
@@ -30,7 +31,6 @@ const MessageCard = (props) => {
         }
     }, [userDetails])
 
-    console.log(newMessages)
     return (
         <TouchableOpacity style={styles.container} onPress={onPress}>
             <View style={styles.profileWrapper}>
