@@ -25,7 +25,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { doc, getFirestore, onSnapshot } from "firebase/firestore";
 import * as ImagePicker from "expo-image-picker";
 import MediaSheet from "./components/MediaSheet";
-import { checkIfUserExists, firebaseImageUpload } from "../../middleware";
+import {
+  checkIfUserExists,
+  filterObjectionableContent,
+  firebaseImageUpload,
+} from "../../middleware";
 import MediaChatCard from "./components/MediaChatCard";
 import { loaderStyles, loaderStylesOpacity } from "../../styles/Global/main";
 import { updateStatus } from "../../state-management/actions/features";
@@ -42,6 +46,12 @@ const ChatScreen = (props) => {
     otherUserData?.id + currentUserId,
     currentUserId + otherUserData?.id,
   ];
+  let isThisUserBlocked = props?.get_user_details?.blocked_users?.includes(
+    otherUserData?.id
+  );
+  let amiBlocked = otherUserData?.blocked_users?.includes(currentUserId);
+  let isChatBlocked = amiBlocked || isThisUserBlocked;
+
   const [loading, setLoading] = useState(true);
   const [sendingMessageLoading, setSendingMessageLoading] = useState(false);
   const [messageText, setMessageText] = useState(null);
@@ -131,17 +141,20 @@ const ChatScreen = (props) => {
   }, [messages]);
 
   const onSend = async () => {
+    let filteredMessage = await filterObjectionableContent(messageText);
     let isRecieverValid = await checkIfUserExists(otherUserData?.id);
     if (!isRecieverValid) {
-      alert("The recipient's account has been deleted. You cannot send a message to a deleted account.")
-      return
+      alert(
+        "The recipient's account has been deleted. You cannot send a message to a deleted account."
+      );
+      return;
     }
     if (sendingMessageLoading) return;
     setSendingMessageLoading(true);
     let messageObj = {
       sender: currentUserId,
       reciever: otherUserData?.id,
-      message: messageText,
+      message: filteredMessage,
       images: images,
       sent: false,
       seen: false,
@@ -151,7 +164,7 @@ const ChatScreen = (props) => {
     let _tempLiveImages = [];
 
     let chatData = {
-      lastMessage: messageText || "Sent an image.",
+      lastMessage: filteredMessage || "Sent an image.",
       messages: prevM,
       created_at: new Date().toLocaleTimeString(),
     };
@@ -162,7 +175,7 @@ const ChatScreen = (props) => {
       JoinedUsers: [otherUserData?.id, currentUserId],
       reciever_details: otherUserData,
       sender_details: currentUser,
-      lastMessage: messageText || "Sent an image.",
+      lastMessage: filteredMessage || "Sent an image.",
       created_at: new Date().toLocaleTimeString(),
     };
     if (!chatRelation) return;
@@ -339,14 +352,26 @@ const ChatScreen = (props) => {
             setImage={setImages}
           />
         )}
-        <TypingComponent
-          messageText={messageText}
-          setMessageText={setMessageText}
-          onSend={onSend}
-          pickImage={pickImage}
-          sendingMessageLoading={sendingMessageLoading}
-          image={images}
-        />
+        {isChatBlocked ? (
+          <View style={styles.issueBar}>
+            <Text style={styles.issueBarText}>
+              {amiBlocked
+                ? "You have been blocked by this user."
+                : isThisUserBlocked
+                ? "You have blocked this user."
+                : null}
+            </Text>
+          </View>
+        ) : (
+          <TypingComponent
+            messageText={messageText}
+            setMessageText={setMessageText}
+            onSend={onSend}
+            pickImage={pickImage}
+            sendingMessageLoading={sendingMessageLoading}
+            image={images}
+          />
+        )}
       </KeyboardAvoidingView>
     </View>
   );

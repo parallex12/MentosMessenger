@@ -86,6 +86,20 @@ export const toHMS_OBJ = (seconds) => {
   return { hours: newObj[0], minutes: newObj[1], seconds: newObj[2] };
 };
 
+export const userActionOptions = (actions, isCurrentUserBlocked) => [
+  {
+    title: "Report User",
+    slug: "Report inappropriate content",
+    icon: <Entypo name="warning" size={RFValue(15)} color="#fff" />,
+    onPress: actions?.report,
+  },
+  {
+    title: `${isCurrentUserBlocked ? "Unblock" : "Block"} User`,
+    slug: "Block this user",
+    icon: <Entypo name="block" size={RFValue(15)} color="#fff" />,
+    onPress: isCurrentUserBlocked ? actions?.unblock : actions?.block,
+  },
+];
 export const settingsOptions = [
   {
     title: "Change Bio",
@@ -249,4 +263,13 @@ export const checkIfUserExists = async (id) => {
   if (!docSnap.exists()) return false;
   if (docSnap.data()?.accountStatus == "deleted") return false;
   return true;
+};
+
+export const filterObjectionableContent = async (text) => {
+  const response = await fetch(
+    `https://www.purgomalum.com/service/json?text=${encodeURIComponent(text)}`
+  );
+  const containsProfanity = await response.json();
+  if (containsProfanity?.error) return text;
+  return containsProfanity?.result;
 };
