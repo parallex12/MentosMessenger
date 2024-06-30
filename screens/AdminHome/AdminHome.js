@@ -52,7 +52,7 @@ const AdminHome = (props) => {
     <View style={styles.container}>
       <Header />
       <View style={styles.content}>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Search onChangeText={(val) => setSearchText(val?.toLowerCase())} />
           {
             loading ?

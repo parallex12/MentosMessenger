@@ -100,6 +100,15 @@ export const userActionOptions = (actions, isCurrentUserBlocked) => [
     onPress: isCurrentUserBlocked ? actions?.unblock : actions?.block,
   },
 ];
+
+export const adminuserActionOptions = (actions, isSuspended) => [
+  {
+    title: `${isSuspended ? "Active account" : "Suspend"}`,
+    slug: `${isSuspended ? "Reactive user account." : "Suspend user account."}`,
+    icon: <Entypo name="user" size={RFValue(15)} color="#fff" />,
+    onPress: isSuspended ? actions.reactive : actions.suspend,
+  },
+];
 export const settingsOptions = [
   {
     title: "Change Bio",

@@ -12,6 +12,7 @@ import { styles as _styles } from "../../styles/UserProfileView/main";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 import {
+  adminuserActionOptions,
   firebaseImageUpload,
   settingsOptions,
   userActionOptions,
@@ -24,10 +25,11 @@ import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import {
   getCurrentUser,
   updateUser,
+  getAllUsers
 } from "../../state-management/actions/features";
 import FlagReportBottomSheet from "../../globalComponents/FlagReportBottomSheet/FlagReportBottomSheet";
 
-const UserProfileView = (props) => {
+const AdminUserProfileView = (props) => {
   let {} = props;
   let { width, height } = useWindowDimensions();
   let styles = _styles({ width, height });
@@ -36,6 +38,7 @@ const UserProfileView = (props) => {
   let blocked_users = props?.get_user_details?.blocked_users || [];
   const isCurrentUserBlocked = blocked_users?.includes(prev_user_data?.id);
   const bottomFlagSheetRef = useRef();
+  const [loading, setLoading] = useState(false);
 
   const Options = ({ data }) => {
     const [buttonLoading, setButtonLoading] = useState(false);
@@ -58,24 +61,27 @@ const UserProfileView = (props) => {
   };
 
   let actionsOnpress = {
-    block: (userId) =>
-      Alert.alert("Block User", "Are you sure you want to block this user?", [
+    suspend: (userId) =>
+      Alert.alert("Warning", "Are you sure you want to suspend this user?", [
         {
           text: "Cancel",
           onPress: () => console.log("Block Cancelled"),
           style: "cancel",
         },
         {
-          text: "OK",
+          text: "Confirm",
           onPress: () => {
-            blocked_users.push(prev_user_data?.id);
             props
-              ?.updateUser({ blocked_users }, currentUser?.uid, () => null)
+              ?.updateUser(
+                { status: "suspend" },
+                prev_user_data?.id,
+                () => null
+              )
               .then((res) => {
-                props?.getCurrentUser(() => null);
+                props?.getAllUsers(setLoading)
                 Alert.alert(
-                  "User Blocked",
-                  "This user has been blocked successfully."
+                  "User account suspended",
+                  "This user has been suspened successfully."
                 );
               })
               .catch((e) => {
@@ -85,45 +91,37 @@ const UserProfileView = (props) => {
           },
         },
       ]),
-    unblock: (userId) =>
-      Alert.alert(
-        "Unblock User",
-        "Are you sure you want to unblock this user?",
-        [
-          {
-            text: "Cancel",
-            onPress: () => console.log("Unblock Cancelled"),
-            style: "cancel",
-          },
-          {
-            text: "OK",
-            onPress: () => {
-              let new_list = blocked_users?.filter(
-                (e) => e != prev_user_data?.id
-              );
-              props
-                ?.updateUser(
-                  { blocked_users: new_list },
-                  currentUser?.uid,
-                  () => null
-                )
-                .then((res) => {
-                  props?.getCurrentUser(() => null);
-                  Alert.alert(
-                    "User Unblocked",
-                    "This user has been unblocked successfully."
-                  );
-                })
-                .catch((e) => {
-                  console.log(e);
-                  alert("Something went wrong try again.");
-                });
-            },
-          },
-        ]
-      ),
 
-    report: (userId, messageId) => bottomFlagSheetRef.current.present(),
+    reactive: (userId) =>
+      Alert.alert("Warning", "Are you sure you want to reactive this user?", [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Reactive Cancelled"),
+          style: "cancel",
+        },
+        {
+          text: "Confirm",
+          onPress: () => {
+            props
+              ?.updateUser(
+                { status: "active" },
+                prev_user_data?.id,
+                () => null
+              )
+              .then((res) => {
+                props?.getAllUsers(setLoading)
+                Alert.alert(
+                  "User account reactived.",
+                  "This user has been reactived successfully."
+                );
+              })
+              .catch((e) => {
+                console.log(e);
+                alert("Something went wrong try again.");
+              });
+          },
+        },
+      ]),
   };
 
   return (
@@ -150,9 +148,25 @@ const UserProfileView = (props) => {
           <Text style={styles.username}>{prev_user_data?.name}</Text>
           <Text style={styles.email}>{prev_user_data?.email}</Text>
         </View>
+
+        <View style={styles.actionsWrapper}>
+          <Text style={styles.label}>
+            Reported by users (
+            {Object.values(prev_user_data?.reports || {})?.length})
+          </Text>
+          {Object.values(prev_user_data?.reports || {})?.map((item, index) => {
+            return (
+              <Text style={styles.reportlabel} key={index}>
+                {eval(index + 1)}: {item[0].label}
+              </Text>
+            );
+          })}
+        </View>
+        {console.log(prev_user_data.status=="suspend")}
+
         <View style={styles.actionsWrapper}>
           <Text style={styles.label}>Actions</Text>
-          {userActionOptions(actionsOnpress, isCurrentUserBlocked)?.map(
+          {adminuserActionOptions(actionsOnpress, prev_user_data.status=="suspend")?.map(
             (item, index) => {
               return <Options key={index} data={item} />;
             }
@@ -174,4 +188,5 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   updateUser,
   getCurrentUser,
-})(UserProfileView);
+  getAllUsers
+})(AdminUserProfileView);

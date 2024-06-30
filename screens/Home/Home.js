@@ -38,14 +38,19 @@ const Home = (props) => {
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   useEffect(() => {
-    props?.getMyChats();
-    props?.getUpdatesOnContacts();
-    props
-      ?.getCurrentUser(setLoading)
-      .then((res) => console.log("Home", res))
-      .catch((e) => console.log("Home", e));
+    props?.getCurrentUser(setLoading);
+    if (props?.get_user_details?.status == "suspend") {
+      props?.SignOut();
+      alert("Your account has been suspended, contact support.");
+    }
+  }, [props?.get_user_details]);
 
-    props?.updateUser({ online: true }, getAuth().currentUser.uid);
+  useEffect(() => {
+    if (props?.get_user_details != null) {
+      props?.getMyChats();
+      props?.getUpdatesOnContacts();
+      props?.updateUser({ online: true }, getAuth().currentUser.uid);
+    }
   }, []);
 
   useEffect(() => {

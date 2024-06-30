@@ -34,6 +34,7 @@ import MediaChatCard from "./components/MediaChatCard";
 import { loaderStyles, loaderStylesOpacity } from "../../styles/Global/main";
 import { updateStatus } from "../../state-management/actions/features";
 import { ImageEditor } from "expo-image-editor";
+import FlagReportBottomSheet from "../../globalComponents/FlagReportBottomSheet/FlagReportBottomSheet";
 
 const ChatScreen = (props) => {
   let {} = props;
@@ -51,7 +52,7 @@ const ChatScreen = (props) => {
   );
   let amiBlocked = otherUserData?.blocked_users?.includes(currentUserId);
   let isChatBlocked = amiBlocked || isThisUserBlocked;
-
+  const bottomFlagSheetRef = useRef();
   const [loading, setLoading] = useState(true);
   const [sendingMessageLoading, setSendingMessageLoading] = useState(false);
   const [messageText, setMessageText] = useState(null);
@@ -256,7 +257,7 @@ const ChatScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      <Header data={otherUserData} />
+      <Header data={otherUserData} bottomSheetRef={bottomFlagSheetRef} />
       {loading && (
         <View style={loaderStylesOpacity()?.container}>
           <ActivityIndicator size="large" color="#222" />
@@ -373,6 +374,10 @@ const ChatScreen = (props) => {
           />
         )}
       </KeyboardAvoidingView>
+      <FlagReportBottomSheet
+        user={otherUserData}
+        bottomSheetRef={bottomFlagSheetRef}
+      />
     </View>
   );
 };

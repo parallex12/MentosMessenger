@@ -1,5 +1,5 @@
 import { Platform, StatusBar, StyleSheet } from "react-native";
-import { RFValue as rf } from "react-native-responsive-fontsize";
+import { RFValue, RFValue as rf } from "react-native-responsive-fontsize";
 import { getPercent } from "../../middleware";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 
@@ -19,6 +19,50 @@ export const standardButtonStyles = ({ width, height }) =>
       fontSize: rf(14),
       fontFamily: "Medium",
       color: "#ffffff",
+    },
+  });
+
+  
+//FlagReportBottomSheet Styles   starts here
+export const FlagReportBottomSheetStyles = ({ width, height }) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    card_header_wrapper: {
+      width: "100%",
+      paddingVertical: getPercent(1, height),
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      borderColor: "#F3F4F6",
+      borderBottomWidth: 1,
+      paddingHorizontal: getPercent(3, width),
+    },
+    sheetContentContainer: {
+      flex: 1,
+    },
+    contentContainer: {
+      flex: 1,
+      paddingHorizontal: getPercent(3, width),
+      alignItems: "center",
+      justifyContent: "flex-start",
+      paddingTop: getPercent(2, height),
+      paddingBottom: getPercent(10, height),
+    },
+    categoriesWrapper: {
+      width: "100%",
+      flex: 1,
+    },
+    categoriesItemWrapper: {
+      width: "100%",
+      minHeight: getPercent(5, height),
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      borderBottomWidth: 1,
+      borderColor: "#F3F4F6",
+      paddingVertical: 15,
     },
   });
 
@@ -81,7 +125,17 @@ export const textFieldStyles = ({ width, height }) =>
       padding:5
     }
   });
-
+  export const font = (s, c, fm, mv, lh, extras) => {
+    return {
+      fontSize: RFValue(s) - 1,
+      color: c,
+      fontFamily: fm,
+      marginVertical: mv,
+      lineHeight: lh == 0 ? null : lh,
+      ...extras,
+    };
+  };
+  
 //bottomMenuStyles  starts here
 export const bottomMenuStyles = ({ width, height }) =>
   StyleSheet.create({

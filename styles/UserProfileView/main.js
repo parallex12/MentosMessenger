@@ -65,14 +65,19 @@ export const styles = ({ width, height }) =>
       marginVertical:2
     },
     actionsWrapper: {
-      flex: 1,
       width: '100%',
       paddingVertical: getPercent(2, height),
     },
     label: {
       fontSize: rf(14),
       fontFamily: 'Regular',
-      color: '#6F7175'
+      color: '#6F7175',
+      marginVertical:10
+    },
+    reportlabel:{
+      fontSize: rf(14),
+      fontFamily: 'Regular',
+      color: '#011A51',
     },
     actionItem: {
       width: '100%',

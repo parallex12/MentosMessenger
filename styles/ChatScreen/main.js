@@ -377,8 +377,8 @@ export const headerStyles = ({ width, height }) =>
       marginTop: 2,
     },
     payBtn: {
-      width: getPercent(20, width),
-      height: getPercent(4, height),
+      width: getPercent(8, width),
+      height: getPercent(8, width),
       backgroundColor: "#011A51",
       borderRadius: 100,
       alignItems: "center",

@@ -7,12 +7,12 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import { headerStyles as _styles } from "../../../styles/ChatScreen/main";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, Entypo } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useNavigation } from "@react-navigation/native";
 
 const Header = (props) => {
-  let { data } = props;
+  let { data, bottomSheetRef } = props;
   let { width, height } = useWindowDimensions();
   let styles = _styles({ width, height });
   let navigation = useNavigation();
@@ -22,11 +22,11 @@ const Header = (props) => {
       <TouchableOpacity onPress={() => navigation?.goBack()}>
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
-      <View style={styles.detailsWrapper}>
-        <TouchableOpacity
-          style={styles.profile}
-          onPress={() => navigation.navigate("UserProfileView", data)}
-        >
+      <TouchableOpacity
+        onPress={() => navigation.navigate("UserProfileView", data)}
+        style={styles.detailsWrapper}
+      >
+        <View style={styles.profile}>
           <Image
             source={
               data?.profile
@@ -36,17 +36,17 @@ const Header = (props) => {
             resizeMode="cover"
             style={styles.profileImg}
           />
-        </TouchableOpacity>
+        </View>
         <View style={styles.textWrapper}>
           <Text style={styles.username}>{data?.name}</Text>
           <Text style={styles.slug}>Mantos Messenger</Text>
         </View>
-      </View>
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.payBtn}
-        onPress={() => alert("Coming Soon!")}
+        onPress={() => bottomSheetRef.current.present()}
       >
-        <Text style={styles.payBtnText}>Pay</Text>
+        <Entypo name="dots-three-vertical" size={15} color="#fff" />
       </TouchableOpacity>
     </View>
   );

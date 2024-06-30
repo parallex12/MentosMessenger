@@ -30,6 +30,7 @@ const Register = (props) => {
     password: null,
     name: null,
     type: "user",
+    status:"active"
   });
 
   const onSubmit = () => {
