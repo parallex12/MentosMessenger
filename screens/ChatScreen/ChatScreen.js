@@ -140,7 +140,6 @@ const ChatScreen = (props) => {
   let memiozedMessages = useMemo(() => {
     return messages;
   }, [messages]);
-
   const onSend = async () => {
     let filteredMessage = await filterObjectionableContent(messageText);
     let isRecieverValid = await checkIfUserExists(otherUserData?.id);
